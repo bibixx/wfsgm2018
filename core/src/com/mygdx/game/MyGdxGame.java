@@ -48,9 +48,9 @@ public class MyGdxGame extends Game {
 		shapeRenderer = new ShapeRenderer();
 
 		AsteroidData[] asteroidData = {
-				new AsteroidData(new Vector2(-300, 100), 32, "planet1.png"),
-				new AsteroidData(new Vector2(100, 300), 32, "planet2.png"),
-				new AsteroidData(new Vector2(400, -50), 32, "planet3.png"),
+				new AsteroidData(new Vector2(-300, 100), 128, "planet1"),
+				new AsteroidData(new Vector2(100, 300), 64, "planet2"),
+				new AsteroidData(new Vector2(400, -50), 56, "planet3"),
 		};
 
 		level = new Level(
@@ -77,7 +77,7 @@ public class MyGdxGame extends Game {
 	}
 
 	private void spawnLevel(Level level) {
-        player = new Entity(world, new Vector2(12, 12), (int)(64f * (61f / 118f)), 64, "laika.png");
+        player = new Entity(world, new Vector2(12, 12), (int)(64f * (61f / 118f)), 64, "laika");
 
         backgroundTexture = new Texture(level.backgroundPath);
 
@@ -88,7 +88,7 @@ public class MyGdxGame extends Game {
 
 		for(int i = 0; i < level.asteroidsData.length; i++) {
 			AsteroidData data = level.asteroidsData[i];
-			Entity asteroid = new CelestialBody(world, new Vector2(data.position), data.radius, "planet1.png");
+			Entity asteroid = new CelestialBody(world, new Vector2(data.position), data.radius, data.texturePath);
 			entityContainer.addEntity("asteroid-"+i, asteroid);
 		}
 

@@ -34,7 +34,7 @@ public class Entity {
         body.createFixture(shape, 1.0f);
         shape.dispose();
 
-        texture = new Texture(spritename);
+        texture = new Texture(spritename + ".png");
     }
 
 
@@ -56,7 +56,7 @@ public class Entity {
         body.createFixture(shape, 1.0f);
         shape.dispose();
 
-        texture = new Texture(spritename);
+        texture = new Texture(spritename + ".png");
     }
 
     public int getRadius() {

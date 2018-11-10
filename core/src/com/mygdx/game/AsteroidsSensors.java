@@ -1,5 +1,7 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ArrayMap;
 
@@ -135,6 +137,10 @@ public class AsteroidsSensors implements ContactListener {
 
 		double force = MyGdxGame.CONST_G * planetMass * playerMass /2
 					 / distanceSquared;
+
+		if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+		    force *= -1;
+        }
 
 		double forceX = (force / Math.sqrt(distanceSquared)) * dX;
         double forceY = (force / Math.sqrt(distanceSquared)) * dY;
