@@ -25,8 +25,6 @@ public class MyGdxGame extends Game {
 
 	private Box2DDebugRenderer b2dr;
 	private World world;
-//	private CelestialBody player;
-//	private CelestialBody planet;
 
 	private SpriteBatch batch;
 	private BitmapFont font;
@@ -35,9 +33,10 @@ public class MyGdxGame extends Game {
 
 	private ShapeRenderer shapeRenderer;
 	private Entity player;
-	private Entity planet;
 
 	private AsteroidsSensors sensors;
+
+	EntityContainer entityContainer;
 
     public MyGdxGame(int screenWidth, int screenHeight){
         this.screenWidth = screenWidth;
@@ -54,7 +53,7 @@ public class MyGdxGame extends Game {
 		float h = Gdx.graphics.getHeight();
 
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, w/2, h/2);
+		camera.setToOrtho(false, w, h);
 		Vector3 position = camera.position;
 		position.x = 0;
 		position.y = 100;
@@ -63,17 +62,24 @@ public class MyGdxGame extends Game {
 		world = new World(new Vector2(0, 0f), false);
 		b2dr = new Box2DDebugRenderer();
 
-		planet = new Entity(batch, shapeRenderer, "spritesheet.png");
-		planet.createBody(world, 0, 100, 64);
-
 		player = new Entity(batch, shapeRenderer, "spritesheet.png");
 		player.createBody(world, -300, 200, 32);
 
-		sensors = new AsteroidsSensors(world, player.getBody(), planet.getBody());
+		player.getBody().setLinearVelocity(6.3f, 0);
+		player.getBody().setUserData("player");
 
+		entityContainer = new EntityContainer();
+
+		Entity asteroid0 = new Entity(batch, shapeRenderer, "spritesheet.png");
+		asteroid0.createBody(world, 0, 100, 64);
+		entityContainer.addEntity("asteroid-0", asteroid0);
+
+		Entity asteroid1 = new Entity(batch, shapeRenderer, "spritesheet.png");
+		asteroid1.createBody(world, -100, -100, 64);
+		entityContainer.addEntity("asteroid-1", asteroid1);
+
+		sensors = new AsteroidsSensors(world, player.getBody(), entityContainer);
 		world.setContactListener(sensors);
-
-		player.getBody().setLinearVelocity(6f, 0);
 	}
 
 	@Override
@@ -93,10 +99,15 @@ public class MyGdxGame extends Game {
         shapeRenderer.setProjectionMatrix(camera.combined.cpy().scl(1f));
 
         player.update();
-        planet.update();
+		for(Entity asteroid : entityContainer.getValues()) {
+			asteroid.update();
+		}
 
         player.render();
-        planet.render();
+
+        for(Entity asteroid : entityContainer.getValues()) {
+        	asteroid.render();
+		}
 
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) Gdx.app.exit();
