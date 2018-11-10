@@ -27,9 +27,12 @@ public class MyGdxGame extends Game {
 
     private SpriteBatch batch;
     private SpriteBatch backgroundBatch;
+    private SpriteBatch grainBatch;
+
 	private BitmapFont font;
 
 	private Texture backgroundTexture;
+	private Texture grainTexture;
 
 	private ShapeRenderer shapeRenderer;
 	private Player player;
@@ -44,6 +47,10 @@ public class MyGdxGame extends Game {
 	public void create () {
         batch = new SpriteBatch();
         backgroundBatch = new SpriteBatch();
+        grainBatch = new SpriteBatch();
+
+        grainTexture = new Texture("grain-sprite-alpha.png");
+
 		font = new BitmapFont();
 		shapeRenderer = new ShapeRenderer();
 
@@ -133,6 +140,11 @@ public class MyGdxGame extends Game {
 
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) Gdx.app.exit();
+
+
+        grainBatch.begin();
+        grainBatch.draw(grainTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        grainBatch.end();
 	}
 
 	@Override
