@@ -1,5 +1,7 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
@@ -9,7 +11,11 @@ import com.badlogic.gdx.utils.TimeUtils;
 public class CelestialBody extends Entity {
     private Vector2 position;
 
+    Texture invertedTexture;
+
     Texture glowTexture;
+    Texture invertedGlowTexture;
+
     Texture orbitTexture;
     double glowOffset;
 
@@ -21,7 +27,11 @@ public class CelestialBody extends Entity {
 
         glowOffset = Math.random() * 40;
 
+        invertedTexture = new Texture(spritename + "-invert.png");
+
         glowTexture = new Texture(spritename + "-glow.png");
+        invertedGlowTexture = new Texture(spritename + "-glow-invert.png");
+
         orbitTexture = new Texture("planet1-orbit.png");
     }
 
@@ -32,10 +42,20 @@ public class CelestialBody extends Entity {
         int wO = w * 3;
         int hO = h * 3;
 
-        batch.draw(glowTexture, position.x - wG, position.y - hG, wG * 2, hG * 2);
+        if(!Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            batch.draw(glowTexture, position.x - wG, position.y - hG, wG * 2, hG * 2);
 
-        batch.draw(texture, position.x - w/2, position.y - h/2, w, h);
+            batch.draw(texture, position.x - w/2, position.y - h/2, w, h);
+        } else {
+            batch.draw(invertedGlowTexture, position.x - wG, position.y - hG, wG * 2, hG * 2);
+
+            batch.draw(invertedTexture, position.x - w/2, position.y - h/2, w, h);
+        }
 
         batch.draw(orbitTexture, position.x - wO/2, position.y - hO/2, wO, hO);
+    }
+
+    public void invert(boolean i) {
+        this.inverted = i;
     }
 }
