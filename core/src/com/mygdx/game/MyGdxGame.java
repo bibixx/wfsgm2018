@@ -48,14 +48,17 @@ public class MyGdxGame extends Game {
 		shapeRenderer = new ShapeRenderer();
 
 		AsteroidData[] asteroidData = {
-				new AsteroidData(new Vector2(-300, 100), 128, "planet1"),
+				new AsteroidData(new Vector2(-300, 100), 32, "planet1"),
 				new AsteroidData(new Vector2(100, 300), 64, "planet2"),
 				new AsteroidData(new Vector2(400, -50), 56, "planet3"),
+				new AsteroidData(new Vector2(-400, -300), 64, "planet2"),
+				new AsteroidData(new Vector2(-600, 450), 64, "planet1"),
+				new AsteroidData(new Vector2(550, 500), 32, "planet3")
 		};
 
 		level = new Level(
-				new Vector2(-300, 200),
-                new Vector2(6.3f, 0),
+				new Vector2(-900, 500),
+                new Vector2(5.3f, -4.8f),
 				asteroidData,
 				"bg.jpg"
 		);
@@ -77,7 +80,7 @@ public class MyGdxGame extends Game {
 	}
 
 	private void spawnLevel(Level level) {
-        player = new Entity(world, new Vector2(12, 12), (int)(64f * (61f / 118f)), 64, "laika");
+        player = new Entity(world, level.playerPosition, (int)(64f * (61f / 118f)), 64, "laika");
 
         backgroundTexture = new Texture(level.backgroundPath);
 
