@@ -79,13 +79,12 @@ public class MyGdxGame extends Game {
 			b2dr.render(world, camera.combined.cpy().scl(PPM));
 		}
 
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        batch.setProjectionMatrix(camera.combined.cpy());
+
         shapeRenderer.setProjectionMatrix(camera.combined.cpy().scl(1f));
 
         player.update();
         player.render();
-
-        shapeRenderer.end();
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) Gdx.app.exit();
 	}

@@ -49,7 +49,7 @@ class Animator {
         TextureRegion currentFrame = animation.getKeyFrame(stateTime, true);
 
         batch.begin();
-        batch.draw(currentFrame, position.x, position.y);
+        batch.draw(currentFrame, position.x - currentFrame.getRegionWidth() / 2, position.y  - currentFrame.getRegionHeight() / 2);
         batch.end();
     }
 

@@ -9,6 +9,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 
 
 class Player {
+    private static final float PPM = MyGdxGame.PPM;
+
     private ShapeRenderer shapeRenderer;
 
     private Animator animator;
@@ -18,7 +20,6 @@ class Player {
 
     Player(ShapeRenderer shapeRenderer, Vector2 position, SpriteBatch batch, CelestialBody cb) {
         this.shapeRenderer = shapeRenderer;
-        this.position = position;
 
         body = cb;
 
@@ -26,8 +27,12 @@ class Player {
     }
 
     void render() {
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.RED);
-        shapeRenderer.circle(body.getBody().getPosition().x * 32, body.getBody().getPosition().y * 32, 16f);
+        shapeRenderer.circle(body.getBody().getPosition().x * PPM, body.getBody().getPosition().y * PPM, 16f);
+        shapeRenderer.end();
+
+        Vector2 position = new Vector2(body.getBody().getPosition().x * PPM, body.getBody().getPosition().y * PPM);
 
         animator.update();
         animator.render(position);
