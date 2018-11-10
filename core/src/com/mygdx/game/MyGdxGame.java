@@ -32,7 +32,7 @@ public class MyGdxGame extends Game {
 		font = new BitmapFont();
 		shapeRenderer = new ShapeRenderer();
 
-		player = new Player(shapeRenderer, new Vector2(20, 20));
+		player = new Player(shapeRenderer, new Vector2(150, 150), batch);
 		//this.setScreen();  // <-- change current screen
 }
 

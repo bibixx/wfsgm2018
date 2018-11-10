@@ -2,33 +2,34 @@ package com.mygdx.game;
 
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
-
-import javax.swing.text.Position;
 
 
 class Player {
     private ShapeRenderer shapeRenderer;
 
-    private Vector2 position;
-    private final float radius = 20f;
+    private Animator animator;
 
-    Player(ShapeRenderer shapeRenderer, Vector2 position) {
+    private Vector2 position;
+    private final float circleRadius = 20f;
+
+    Player(ShapeRenderer shapeRenderer, Vector2 position, SpriteBatch batch) {
         this.shapeRenderer = shapeRenderer;
         this.position = position;
+
+        //animator  = new Animator(batch, "spritesheet.png", 0.5f, 4, 1);
     }
 
     void render() {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.RED);
-        shapeRenderer.circle(position.x, position.y, radius);
+        shapeRenderer.circle(position.x, position.y, circleRadius);
         shapeRenderer.end();
+
+        /*animator.update();
+        animator.render(position);*/
     }
 
     void changePostion(Vector2 newPostion){
@@ -43,5 +44,6 @@ class Player {
     }
 
     void dispose() {
+        //animator.dispose();
     }
 }
