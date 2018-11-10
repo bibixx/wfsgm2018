@@ -20,7 +20,9 @@ public class MyGdxGame extends ApplicationAdapter {
 	private Body player;
 	private Body planet;
 
-	@Override
+    double constG = -6.67 * Math.pow(10, 1);
+
+    @Override
 	public void create () {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
@@ -35,9 +37,16 @@ public class MyGdxGame extends ApplicationAdapter {
 		world = new World(new Vector2(0, 0f), false);
 		b2dr = new Box2DDebugRenderer();
 
-		player = createCircle(-100, 140, 32, 32, false);
-		planet = createCircle(0, 100, 64, 32, false);
-	}
+		player = createCircle(0, 200, 32, false);
+		planet = createCircle(0, 100, 64, false);
+
+        player.setLinearVelocity(
+            (float)Math.sqrt(
+                    Math.abs(constG * planet.getMass()) / ((200 - 100) / PPM)
+            )
+        , 0f);
+
+    }
 
 	@Override
 	public void render() {
@@ -63,22 +72,29 @@ public class MyGdxGame extends ApplicationAdapter {
 		world.step(1 / 60f, 6, 2);
 
 		//inputUpdate(delta);
-		player.setLinearVelocity(1, 0);
-		player.applyForceToCenter(0f, 0, true);
+
+		double dX = player.getPosition().x - planet.getPosition().x;
+		double dY = player.getPosition().y - planet.getPosition().y;
 
 		double distanceSquared = Math.abs(
-				Math.pow(player.getPosition().x - planet.getPosition().x, 2)
-			  + Math.pow(player.getPosition().y - planet.getPosition().y, 2)
+				Math.pow(dX, 2)
+			  + Math.pow(dY, 2)
 		);
 
 		double planetMass = planet.getMass();
 		double playerMass = player.getMass();
 
-		double constG = 6.67 * Math.pow(10, -11);
 		double force = constG * planetMass * playerMass
-					 / distanceSquared
-		;
-		System.out.println(force);
+					 / distanceSquared;
+
+		double forceX = (force / Math.sqrt(distanceSquared)) * dX;
+        double forceY = (force / Math.sqrt(distanceSquared)) * dY;
+
+
+        player.applyForceToCenter((float)forceX, (float)forceY, true);
+
+
+        System.out.println(force);
 
 
 		camera.update();
@@ -110,7 +126,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		camera.update();
 	}
 
-	public Body createCircle(int x, int y, int width, int height, boolean isStatic) {
+	public Body createCircle(int x, int y, int width, boolean isStatic) {
 		Body pBody;
 		BodyDef def = new BodyDef();
 
@@ -124,7 +140,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		pBody = world.createBody(def);
 
 		CircleShape shape = new CircleShape();
-		shape.setRadius(width / 4 / PPM);
+		shape.setRadius(width / 2 / PPM);
 
 		pBody.createFixture(shape, 1.0f);
 		shape.dispose();
