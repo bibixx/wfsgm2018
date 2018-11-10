@@ -8,12 +8,12 @@ class Level {
     Vector2 playerPosition;
     Vector2 initialPlayerVelocity;
     AsteroidData[] asteroidsData;
-    Texture backgroundTexture;
+    String backgroundPath;
 
     Level(Vector2 playerPosition, Vector2 playerVelocity, AsteroidData[] asteroidsData, String backgroundPath){
         this.playerPosition = playerPosition;
         this.initialPlayerVelocity = playerVelocity;
         this.asteroidsData = asteroidsData;
-        this.backgroundTexture = new Texture(Gdx.files.internal(backgroundPath));
+        this.backgroundPath = backgroundPath;
     }
 }
