@@ -55,6 +55,10 @@ public class CelestialBody {
         );
     }
 
+    public void orbit() {
+
+    }
+
     public Body getBody() {
         return body;
     }
