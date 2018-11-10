@@ -15,6 +15,8 @@ public class Entity {
     int w;
     int h;
 
+    boolean inverted;
+
     Entity(World world, Batch batch, Vector2 position, int r, String spritename) {
         this.batch = batch;
         this.r = r;

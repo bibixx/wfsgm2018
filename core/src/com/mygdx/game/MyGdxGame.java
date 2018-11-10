@@ -27,9 +27,12 @@ public class MyGdxGame extends Game {
 
     private SpriteBatch batch;
     private SpriteBatch backgroundBatch;
+    private SpriteBatch grainBatch;
+
 	private BitmapFont font;
 
 	private Texture backgroundTexture;
+	private Texture grainTexture;
 
 	private ShapeRenderer shapeRenderer;
 	private Player player;
@@ -38,28 +41,39 @@ public class MyGdxGame extends Game {
 
 	EntityContainer entityContainer;
 
+	private int currentLevel = 0;
+
 	Level level;
 
 	@Override
 	public void create () {
         batch = new SpriteBatch();
         backgroundBatch = new SpriteBatch();
+        grainBatch = new SpriteBatch();
+
+        grainTexture = new Texture("grain-sprite-alpha.png");
+
 		font = new BitmapFont();
 		shapeRenderer = new ShapeRenderer();
 
-		AsteroidData[] asteroidData = {
-				new AsteroidData(new Vector2(-300, 100), 32, "planet1"),
-				new AsteroidData(new Vector2(100, 300), 64, "planet2"),
-				new AsteroidData(new Vector2(400, -50), 56, "planet3"),
-				new AsteroidData(new Vector2(-400, -300), 64, "planet2"),
-				new AsteroidData(new Vector2(-600, 450), 64, "planet1"),
-				new AsteroidData(new Vector2(550, 500), 32, "planet3")
-		};
+        AsteroidData[][] levels = {
+            new AsteroidData[]{
+                new AsteroidData(new Vector2(-300, 100), 32, "planet1"),
+                new AsteroidData(new Vector2(100, 300), 64, "planet2"),
+                new AsteroidData(new Vector2(400, -50), 56, "planet3"),
+                new AsteroidData(new Vector2(-400, -300), 64, "planet2"),
+                new AsteroidData(new Vector2(-600, 450), 64, "planet1"),
+                new AsteroidData(new Vector2(550, 500), 32, "planet3")
+            },
+            new AsteroidData[]{
+                    new AsteroidData(new Vector2(-300, 100), 32, "planet1"),
+            },
+        };
 
 		level = new Level(
 				new Vector2(- Gdx.graphics.getWidth() / 2 + 64 , 0),
                 new Vector2(5.3f, 0),
-				asteroidData,
+                levels[currentLevel],
 				"bg.jpg"
 		);
 
@@ -95,7 +109,10 @@ public class MyGdxGame extends Game {
 		}
 
 		Runnable restoreLvlCb = () -> create();
-		Runnable loadNextLvlCb = () -> System.out.println("not yet");
+		Runnable loadNextLvlCb = () -> {
+		    currentLevel++;
+		    create();
+        };
 		sensors = new AsteroidsSensors(world, player, entityContainer, restoreLvlCb, loadNextLvlCb);
 		world.setContactListener(sensors);
 	}
@@ -120,6 +137,7 @@ public class MyGdxGame extends Game {
 		batch.begin();
 
         player.update();
+
 		for(Entity asteroid : entityContainer.getValues()) {
 			asteroid.update();
 		}
@@ -134,6 +152,21 @@ public class MyGdxGame extends Game {
 
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) Gdx.app.exit();
+        if(Gdx.input.isKeyJustPressed(Input.Keys.R)) create();
+        if(Gdx.input.isKeyJustPressed(Input.Keys.N)) {
+            currentLevel++;
+            create();
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+            currentLevel--;
+            create();
+        }
+
+
+        grainBatch.begin();
+        grainBatch.draw(grainTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        grainBatch.end();
 	}
 
 	@Override
