@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -10,13 +11,13 @@ import com.badlogic.gdx.math.Vector2;
 class Animator {
     private Animation<TextureRegion> animation;
     private final Texture spriteSheet;
-    private SpriteBatch batch;
+    private Batch batch;
 
     private float stateTime;
 
     private float frameDuration;
 
-    Animator(SpriteBatch batch, String spritePath, float frameDuration, int frameCol, int frameRows){
+    Animator(Batch batch, String spritePath, float frameDuration, int frameCol, int frameRows){
         this.batch = batch;
 
         this.frameDuration = frameDuration;
@@ -48,9 +49,7 @@ class Animator {
 
         TextureRegion currentFrame = animation.getKeyFrame(stateTime, true);
 
-        batch.begin();
-        batch.draw(currentFrame, position.x - currentFrame.getRegionWidth() / 2, position.y  - currentFrame.getRegionHeight() / 2);
-        batch.end();
+        batch.draw(currentFrame, position.x, position.y);
     }
 
     void update(){
