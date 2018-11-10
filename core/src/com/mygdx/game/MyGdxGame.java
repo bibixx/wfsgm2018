@@ -32,7 +32,7 @@ public class MyGdxGame extends Game {
 	private Texture backgroundTexture;
 
 	private ShapeRenderer shapeRenderer;
-	private Entity player;
+	private Player player;
 
 	private AsteroidsSensors sensors;
 
@@ -80,7 +80,7 @@ public class MyGdxGame extends Game {
 	}
 
 	private void spawnLevel(Level level) {
-        player = new Entity(world, batch, level.playerPosition, (int)(64f * (61f / 118f)), 64, "laika");
+        player = new Player(world, batch, level.playerPosition, (int)(64f * (61f / 118f)), 64, "laika");
 
         backgroundTexture = new Texture(level.backgroundPath);
 
