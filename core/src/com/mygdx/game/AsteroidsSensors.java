@@ -18,13 +18,16 @@ public class AsteroidsSensors implements ContactListener {
     private boolean shouldRestorePlayer;
     private Runnable restoreLvlCb;
     private boolean didPlayerHitCelestial;
+    private Runnable loadNextLvlCb;
+    private boolean shouldLoadNextLvl;
 
-    public AsteroidsSensors(World _world, Player _player, EntityContainer _entityContainer, Runnable _restoreLblCb) {
+    public AsteroidsSensors(World _world, Player _player, EntityContainer _entityContainer, Runnable _restoreLblCb, Runnable _loadNextLevelCb) {
         world = _world;
         player = _player;
         entityContainer = _entityContainer;
         restoreLvlCb = _restoreLblCb;
         sensors = new ArrayMap<String, Body>();
+        loadNextLvlCb = _loadNextLevelCb;
 
         for (String key: entityContainer.getKeys()) {
             Entity asteroid = entityContainer.getEntity(key);
@@ -42,9 +45,10 @@ public class AsteroidsSensors implements ContactListener {
         int halfScreenW = Gdx.graphics.getWidth() / 2;
         int halfScreenH = Gdx.graphics.getHeight() / 2;
 
-        createWallSensor(new Vector2(-halfScreenW - 10, -halfScreenH), new Vector2(-halfScreenW - 10, halfScreenH));
-        createWallSensor(new Vector2(-halfScreenW, halfScreenH + 10), new Vector2(halfScreenW, halfScreenH + 10));
-        createWallSensor(new Vector2(-halfScreenW, -halfScreenH - 10), new Vector2(halfScreenW, -halfScreenH - 10));
+        createBoundarySensor(new Vector2(-halfScreenW - 10, -halfScreenH), new Vector2(-halfScreenW - 10, halfScreenH), "wall");
+        createBoundarySensor(new Vector2(-halfScreenW, halfScreenH + 10), new Vector2(halfScreenW, halfScreenH + 10), "wall");
+        createBoundarySensor(new Vector2(-halfScreenW, -halfScreenH - 10), new Vector2(halfScreenW, -halfScreenH - 10), "wall");
+        createBoundarySensor(new Vector2(halfScreenW + 64, halfScreenH), new Vector2(halfScreenW + 64, -halfScreenH), "gate");
     }
 
     private Body createCircleSensor(int x, int y, int radius, String userData) {
@@ -71,7 +75,7 @@ public class AsteroidsSensors implements ContactListener {
         return pBody;
     }
 
-    private Body createWallSensor(Vector2 from, Vector2 to) {
+    private Body createBoundarySensor(Vector2 from, Vector2 to, String userData) {
         final float PPM = MyGdxGame.PPM;
         Body pBody;
         BodyDef def = new BodyDef();
@@ -91,15 +95,15 @@ public class AsteroidsSensors implements ContactListener {
         pBody.createFixture(fdef);
         shape.dispose();
 
-        pBody.setUserData("wall");
+        pBody.setUserData(userData);
         return pBody;
     }
 
-    private boolean isPlayerInContact(Contact contact) {
+    private boolean doesContactContain(Contact contact, String userData) {
         Object fixtureDataA = contact.getFixtureA().getBody().getUserData();
         Object fixtureDataB = contact.getFixtureB().getBody().getUserData();
 
-        return (fixtureDataA.equals("player") || fixtureDataB.equals("player"));
+        return (fixtureDataA.equals(userData) || fixtureDataB.equals(userData));
     }
 
     private Object findOrbitSensorInContact(Contact contact) {
@@ -118,15 +122,9 @@ public class AsteroidsSensors implements ContactListener {
         return null;
     }
 
-    private boolean didPlayerHitWallSensor(Contact contact) {
-        Object fixtureDataA = contact.getFixtureA().getBody().getUserData();
-        Object fixtureDataB = contact.getFixtureB().getBody().getUserData();
-
-        return (fixtureDataA.equals("wall") || fixtureDataB.equals("wall"));
-    }
 
     public void beginContact(Contact contact) {
-        if(!isPlayerInContact(contact)) {
+        if(!doesContactContain(contact, "player")) {
             return;
         }
 
@@ -136,9 +134,18 @@ public class AsteroidsSensors implements ContactListener {
             return;
         }
 
-        didPlayerHitCelestial = !didPlayerHitWallSensor(contact);
+        if(doesContactContain(contact, "gate")) {
+            shouldLoadNextLvl = true;
+            return;
+        }
 
-        player.getBody().setLinearVelocity(0, 0);
+        if (doesContactContain(contact, "wall")){
+            didPlayerHitCelestial = false;
+        } else {
+            didPlayerHitCelestial = true;
+            player.getBody().setLinearVelocity(0, 0);
+        }
+
         isInGravityField = false;
         shouldRestorePlayer = true;
     }
@@ -151,7 +158,7 @@ public class AsteroidsSensors implements ContactListener {
 
     @Override
     public void endContact(Contact contact) {
-        if(!isPlayerInContact(contact)) {
+        if(!doesContactContain(contact, "player")) {
             return;
         }
 
@@ -183,6 +190,11 @@ public class AsteroidsSensors implements ContactListener {
                 }
             }, 2.5f);
             return;
+        }
+
+        if(shouldLoadNextLvl) {
+            shouldLoadNextLvl = false;
+            loadNextLvlCb.run();
         }
 
         if(!isInGravityField) {

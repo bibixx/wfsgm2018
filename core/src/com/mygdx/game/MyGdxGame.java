@@ -57,8 +57,8 @@ public class MyGdxGame extends Game {
 		};
 
 		level = new Level(
-				new Vector2(-900, 500),
-                new Vector2(5.3f, -4.8f),
+				new Vector2(- Gdx.graphics.getWidth() / 2 + 64 , 0),
+                new Vector2(5.3f, 0),
 				asteroidData,
 				"bg.jpg"
 		);
@@ -95,7 +95,8 @@ public class MyGdxGame extends Game {
 		}
 
 		Runnable restoreLvlCb = () -> create();
-		sensors = new AsteroidsSensors(world, player, entityContainer, restoreLvlCb);
+		Runnable loadNextLvlCb = () -> System.out.println("not yet");
+		sensors = new AsteroidsSensors(world, player, entityContainer, restoreLvlCb, loadNextLvlCb);
 		world.setContactListener(sensors);
 	}
 
