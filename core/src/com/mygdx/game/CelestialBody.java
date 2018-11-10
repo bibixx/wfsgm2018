@@ -34,9 +34,9 @@ public class CelestialBody {
         shape.dispose();
     }
 
-    public void orbit(CelestialBody body2) {
-        double dX = Math.abs(body2.getBody().getPosition().x - body.getPosition().x);
-        double dY = Math.abs(body2.getBody().getPosition().y - body.getPosition().y);
+    public void orbit(Body body2) {
+        double dX = Math.abs(body2.getPosition().x - body.getPosition().x);
+        double dY = Math.abs(body2.getPosition().y - body.getPosition().y);
 
         double orbitSize =
             Math.sqrt(
@@ -45,7 +45,7 @@ public class CelestialBody {
             );
 
         double forceScalar = (float)Math.sqrt(
-                Math.abs(MyGdxGame.CONST_G * body2.getBody().getMass()) / (orbitSize)
+                Math.abs(MyGdxGame.CONST_G * body2.getMass()) / (orbitSize)
         );
 
 
@@ -53,10 +53,6 @@ public class CelestialBody {
             (float)((dY / orbitSize) * forceScalar),
             (float)((dX / orbitSize) * forceScalar)
         );
-    }
-
-    public void orbit() {
-
     }
 
     public Body getBody() {

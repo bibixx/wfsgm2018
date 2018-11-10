@@ -20,16 +20,16 @@ class Entity {
 
     private Vector2 position;
 
-    Entity(SpriteBatch batch, ShapeRenderer shapeRenderer) {
+    Entity(SpriteBatch batch, ShapeRenderer shapeRenderer, String spritePath) {
         this.shapeRenderer = shapeRenderer;
 
-        animator = new Animator(batch, "spritesheet.png", 0.5f, 4, 1);
+        animator = new Animator(batch, spritePath, 0.5f, 4, 1);
     }
 
     public void createBody(World world, int x, int y, int d) {
         this.r = d / 2;
 
-        this.body = new CelestialBody(world, x, y, r, false);
+        this.body = new CelestialBody(world, x, y, d, false);
     }
 
     void render() {
@@ -48,7 +48,7 @@ class Entity {
         this.position = newPostion;
     }
 
-    public void orbit(CelestialBody body2) {
+    public void orbit(Body body2) {
         body.orbit(body2);
     }
 

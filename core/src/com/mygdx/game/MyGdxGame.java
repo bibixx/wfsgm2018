@@ -26,7 +26,7 @@ public class MyGdxGame extends Game {
 	private Box2DDebugRenderer b2dr;
 	private World world;
 //	private CelestialBody player;
-	private CelestialBody planet;
+//	private CelestialBody planet;
 
 	private SpriteBatch batch;
 	private BitmapFont font;
@@ -35,7 +35,7 @@ public class MyGdxGame extends Game {
 
 	private ShapeRenderer shapeRenderer;
 	private Entity player;
-
+	private Entity planet;
 
     public MyGdxGame(int screenWidth, int screenHeight){
         this.screenWidth = screenWidth;
@@ -61,13 +61,14 @@ public class MyGdxGame extends Game {
 		world = new World(new Vector2(0, 0f), false);
 		b2dr = new Box2DDebugRenderer();
 
-		planet = new CelestialBody(world, 0, 100, 64, false);
+        planet = new Entity(batch, shapeRenderer, "spritesheet.png");
+        planet.createBody(world, 0, 100, 64);
 
-		player = new Entity(batch, shapeRenderer);
+		player = new Entity(batch, shapeRenderer, "spritesheet.png");
 		player.createBody(world, 0, 200, 32);
 
 
-		player.orbit(planet);
+		player.orbit(planet.getBody());
 	}
 
 	@Override
@@ -87,7 +88,11 @@ public class MyGdxGame extends Game {
         shapeRenderer.setProjectionMatrix(camera.combined.cpy().scl(1f));
 
         player.update();
+        planet.update();
+
         player.render();
+        planet.render();
+
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) Gdx.app.exit();
 	}
