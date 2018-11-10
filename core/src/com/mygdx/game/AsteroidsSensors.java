@@ -22,8 +22,8 @@ public class AsteroidsSensors implements ContactListener {
             String sensorId = "asteroid-sensor-" + key.charAt(key.length() - 1);
 
             Body sensor = createCircleSensor(
-                    (int)(asteroid.getPosition().x * MyGdxGame.PPM),
-                    (int)(asteroid.getPosition().y * MyGdxGame.PPM),
+                    (int)(asteroid.getBody().getPosition().x * MyGdxGame.PPM),
+                    (int)(asteroid.getBody().getPosition().y * MyGdxGame.PPM),
                     asteroid.getRadius() * 3,
                     sensorId
             );

@@ -1,64 +1,77 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 
+public class Entity {
+    static public final float PPM = MyGdxGame.PPM;
+    Batch batch;
+    Body body;
+    Texture texture;
+    int r;
 
-class Entity {
-    private static final float PPM = MyGdxGame.PPM;
+    int w;
+    int h;
 
-    private ShapeRenderer shapeRenderer;
-
-    private Animator animator;
-    private CelestialBody body;
-
-    private int r;
-
-    Entity(SpriteBatch batch, ShapeRenderer shapeRenderer, String spritePath) {
-        this.shapeRenderer = shapeRenderer;
-
-        animator = new Animator(batch, spritePath, 0.5f, 4, 1);
-    }
-
-    public int getRadius() {return r;}
-
-    public void createBody(World world, int x, int y, int r) {
+    Entity(World world, Vector2 position, int r, String spritename) {
         this.r = r;
+        this.w = r * 2;
+        this.h = r * 2;
 
-        this.body = new CelestialBody(world, x, y, r*2, false);
-        body.getBody().setUserData("player");
+        BodyDef def = new BodyDef();
+        def.type = BodyDef.BodyType.DynamicBody;
+
+        def.position.set(position.x / PPM, position.y / PPM);
+        def.fixedRotation = true;
+
+        body = world.createBody(def);
+
+        CircleShape shape = new CircleShape();
+        shape.setRadius(r / PPM);
+
+        body.createFixture(shape, 1.0f);
+        shape.dispose();
+
+        texture = new Texture(spritename);
     }
 
-    void render() {
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.RED);
-        shapeRenderer.circle(body.getBody().getPosition().x * PPM, body.getBody().getPosition().y * PPM, r);
-        shapeRenderer.end();
 
-        Vector2 position = new Vector2(body.getBody().getPosition().x * PPM, body.getBody().getPosition().y * PPM);
+    Entity(World world, Vector2 position, int w, int h, String spritename) {
+        this.w = w;
+        this.h = h;
 
-        animator.update();
-        animator.render(position);
+        BodyDef def = new BodyDef();
+        def.type = BodyDef.BodyType.DynamicBody;
+
+        def.position.set(position.x / PPM, position.y / PPM);
+        def.fixedRotation = true;
+
+        body = world.createBody(def);
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(w / 2 / PPM, h / 2 / PPM);
+
+        body.createFixture(shape, 1.0f);
+        shape.dispose();
+
+        texture = new Texture(spritename);
     }
 
+    public int getRadius() {
+        return r;
+    }
 
     public Body getBody() {
-        return body.getBody();
+        return body;
     }
 
-    Vector2 getPosition(){
-        return this.body.getBody().getPosition();
+    public void render(Batch batch) {
+        batch.draw(texture, body.getPosition().x * PPM - w/2, body.getPosition().y * PPM - h/2, w, h);
     }
 
-    void update() {
-    }
+    public void update() {};
 
-    void dispose() {
-        animator.dispose();
-    }
+    public void dispose() {};
 }
-
