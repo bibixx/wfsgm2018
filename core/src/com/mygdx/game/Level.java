@@ -7,13 +7,13 @@ import com.badlogic.gdx.math.Vector2;
 class Level {
     Vector2 playerPosition;
     Vector2 initialPlayerVelocity;
-    Vector2[] obstaclesPosition;
+    AsteroidData[] asteroidsData;
     Texture backgroundTexture;
 
-    Level(Vector2 playerPosition, Vector2 playerVelocity, Vector2[] obstaclesPosition, String backgroundPath){
+    Level(Vector2 playerPosition, Vector2 playerVelocity, AsteroidData[] asteroidsData, String backgroundPath){
         this.playerPosition = playerPosition;
         this.initialPlayerVelocity = playerVelocity;
-        this.obstaclesPosition = obstaclesPosition;
+        this.asteroidsData = asteroidsData;
         this.backgroundTexture = new Texture(Gdx.files.internal(backgroundPath));
     }
 }

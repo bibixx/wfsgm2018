@@ -26,10 +26,10 @@ class Entity {
 
     public int getRadius() {return r;}
 
-    public void createBody(World world, int x, int y, int d) {
-        this.r = d / 2;
+    public void createBody(World world, int x, int y, int r) {
+        this.r = r;
 
-        this.body = new CelestialBody(world, x, y, d, false);
+        this.body = new CelestialBody(world, x, y, r*2, false);
         body.getBody().setUserData("player");
     }
 
