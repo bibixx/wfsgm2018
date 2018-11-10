@@ -38,6 +38,8 @@ public class MyGdxGame extends Game {
 
 	EntityContainer entityContainer;
 
+	Level level;
+
     public MyGdxGame(int screenWidth, int screenHeight){
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
@@ -48,6 +50,19 @@ public class MyGdxGame extends Game {
 		batch = new SpriteBatch();
 		font = new BitmapFont();
 		shapeRenderer = new ShapeRenderer();
+
+		AsteroidData[] asteroidData = {
+				new AsteroidData(new Vector2(-300, 100), 32, "spritesheet.png"),
+				new AsteroidData(new Vector2(100, 300), 32, "spritesheet.png"),
+				new AsteroidData(new Vector2(400, -50), 32, "spritesheet.png"),
+		};
+
+		level = new Level(
+				new Vector2(-300, 200),
+				new Vector2(6.3f, 0),
+				asteroidData,
+				"spritesheet.png"
+		);
 
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
@@ -62,21 +77,24 @@ public class MyGdxGame extends Game {
 		world = new World(new Vector2(0, 0f), false);
 		b2dr = new Box2DDebugRenderer();
 
-		player = new Entity(batch, shapeRenderer, "spritesheet.png");
-		player.createBody(world, -300, 200, 32);
+		spawnLevel(level);
+	}
 
-		player.getBody().setLinearVelocity(6.3f, 0);
+	private void spawnLevel(Level level) {
+		player = new Entity(batch, shapeRenderer, "spritesheet.png");
+		player.createBody(world, (int)level.playerPosition.x, (int)level.playerPosition.y, 32);
+
+		player.getBody().setLinearVelocity(level.initialPlayerVelocity.x, level.initialPlayerVelocity.y);
 		player.getBody().setUserData("player");
 
 		entityContainer = new EntityContainer();
 
-		Entity asteroid0 = new Entity(batch, shapeRenderer, "spritesheet.png");
-		asteroid0.createBody(world, 0, 100, 64);
-		entityContainer.addEntity("asteroid-0", asteroid0);
-
-		Entity asteroid1 = new Entity(batch, shapeRenderer, "spritesheet.png");
-		asteroid1.createBody(world, -100, -100, 64);
-		entityContainer.addEntity("asteroid-1", asteroid1);
+		for(int i =0; i<level.asteroidsData.length; i++) {
+			AsteroidData data = level.asteroidsData[i];
+			Entity asteroid = new Entity(batch, shapeRenderer, data.texturePath);
+			asteroid.createBody(world, (int)data.position.x, (int)data.position.y, data.radius);
+			entityContainer.addEntity("asteroid-"+i, asteroid);
+		}
 
 		sensors = new AsteroidsSensors(world, player.getBody(), entityContainer);
 		world.setContactListener(sensors);
