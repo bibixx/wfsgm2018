@@ -37,6 +37,8 @@ public class MyGdxGame extends Game {
 	private Entity player;
 	private Entity planet;
 
+	private AsteroidsSensors sensors;
+
     public MyGdxGame(int screenWidth, int screenHeight){
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
@@ -61,14 +63,17 @@ public class MyGdxGame extends Game {
 		world = new World(new Vector2(0, 0f), false);
 		b2dr = new Box2DDebugRenderer();
 
-        planet = new Entity(batch, shapeRenderer, "spritesheet.png");
-        planet.createBody(world, 0, 100, 64);
+		planet = new Entity(batch, shapeRenderer, "spritesheet.png");
+		planet.createBody(world, 0, 100, 64);
 
 		player = new Entity(batch, shapeRenderer, "spritesheet.png");
-		player.createBody(world, 0, 200, 32);
+		player.createBody(world, -300, 200, 32);
 
+		sensors = new AsteroidsSensors(world, player.getBody(), planet.getBody());
 
-		player.orbit(planet.getBody());
+		world.setContactListener(sensors);
+
+		player.getBody().setLinearVelocity(6f, 0);
 	}
 
 	@Override
@@ -110,23 +115,7 @@ public class MyGdxGame extends Game {
 	public void update(float delta) {
 		world.step(delta, 6, 2);
 
-		double dX = player.getBody().getPosition().x - planet.getBody().getPosition().x;
-		double dY = player.getBody().getPosition().y - planet.getBody().getPosition().y;
-
-		double distanceSquared = Math.abs(
-				Math.pow(dX, 2)
-			  + Math.pow(dY, 2)
-		);
-
-		double planetMass = planet.getBody().getMass();
-		double playerMass = player.getBody().getMass();
-
-		double force = CONST_G * planetMass * playerMass / distanceSquared;
-
-		double forceX = (force / Math.sqrt(distanceSquared)) * dX;
-        double forceY = (force / Math.sqrt(distanceSquared)) * dY;
-
-        player.getBody().applyForceToCenter((float)forceX, (float)forceY, true);
+		sensors.update();
 
 		camera.update();
 	}

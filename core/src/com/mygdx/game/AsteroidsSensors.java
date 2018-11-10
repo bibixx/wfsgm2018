@@ -8,13 +8,14 @@ public class AsteroidsSensors implements ContactListener {
     private Body player;
     private Body asteroid;
     private Body sensor;
+    private boolean isInGravityField = false;
 
     public AsteroidsSensors(World _world, Body _player, Body _asteroid) {
         world = _world;
         player = _player;
         asteroid = _asteroid;
 
-        int sensorWidth = 128;
+        int sensorWidth = 192;
         sensor = createCircleSensor((int)(_asteroid.getPosition().x * MyGdxGame.PPM), (int)(_asteroid.getPosition().y * MyGdxGame.PPM),sensorWidth);
     }
 
@@ -42,24 +43,29 @@ public class AsteroidsSensors implements ContactListener {
         return pBody;
     }
 
-    public void beginContact(Contact contact) {
+    private boolean isContactBetweenPlayerAndSensor(Contact contact) {
         Object fixtureDataA = contact.getFixtureA().getBody().getUserData();
         Object fixtureDataB = contact.getFixtureB().getBody().getUserData();
 
-        if(!(fixtureDataA.equals("asteroid-sensor") && fixtureDataB.equals("player"))
-          && !(fixtureDataB.equals("asteroid-sensor") && fixtureDataA.equals("player"))) {
-            System.out.println("not interested: " + fixtureDataA + " | " + fixtureDataB);
+        return (fixtureDataA.equals("asteroid-sensor") && fixtureDataB.equals("player"))
+            || (fixtureDataB.equals("asteroid-sensor") && fixtureDataA.equals("player"));
+    }
+
+    public void beginContact(Contact contact) {
+        if(!isContactBetweenPlayerAndSensor(contact)) {
             return;
         }
 
-        System.out.println(fixtureDataA + " | " + fixtureDataB);
+        isInGravityField = true;
     }
 
     @Override
     public void endContact(Contact contact) {
-//        Fixture fixtureA = contact.getFixtureA();
-//        Fixture fixtureB = contact.getFixtureB();
-//        Gdx.app.log("endContact", "between " + fixtureA.toString() + " and " + fixtureB.toString());
+        if(!isContactBetweenPlayerAndSensor(contact)) {
+            return;
+        }
+
+        isInGravityField = false;
     }
 
     @Override
@@ -68,5 +74,31 @@ public class AsteroidsSensors implements ContactListener {
 
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {
+    }
+
+    public void update() {
+        if(!isInGravityField) {
+            return;
+        }
+
+        double dX = player.getPosition().x - asteroid.getPosition().x;
+		double dY = player.getPosition().y - asteroid.getPosition().y;
+
+		double distanceSquared = Math.abs(
+				Math.pow(dX, 2)
+			  + Math.pow(dY, 2)
+		);
+
+		double planetMass = asteroid.getMass();
+		double playerMass = player.getMass();
+
+		double force = MyGdxGame.CONST_G * planetMass * playerMass /2
+					 / distanceSquared;
+
+		double forceX = (force / Math.sqrt(distanceSquared)) * dX;
+        double forceY = (force / Math.sqrt(distanceSquared)) * dY;
+
+
+        player.applyForceToCenter((float)forceX, (float)forceY, true);
     }
 }

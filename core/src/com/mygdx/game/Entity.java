@@ -30,6 +30,7 @@ class Entity {
         this.r = d / 2;
 
         this.body = new CelestialBody(world, x, y, d, false);
+        body.getBody().setUserData("player");
     }
 
     void render() {
