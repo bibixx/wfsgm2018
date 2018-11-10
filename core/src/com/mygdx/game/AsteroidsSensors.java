@@ -1,25 +1,38 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.ArrayMap;
 
 public class AsteroidsSensors implements ContactListener {
     private World world;
     private Body player;
-    private Body asteroid;
-    private Body sensor;
+    private ArrayMap<String, Body> sensors;
     private boolean isInGravityField = false;
+    private EntityContainer entityContainer;
+    private Body activeAsteroidBody;
 
-    public AsteroidsSensors(World _world, Body _player, Body _asteroid) {
+    public AsteroidsSensors(World _world, Body _player, EntityContainer _entityContainer) {
         world = _world;
         player = _player;
-        asteroid = _asteroid;
+        entityContainer = _entityContainer;
+        sensors = new ArrayMap<String, Body>();
 
-        int sensorWidth = 192;
-        sensor = createCircleSensor((int)(_asteroid.getPosition().x * MyGdxGame.PPM), (int)(_asteroid.getPosition().y * MyGdxGame.PPM),sensorWidth);
+        for (String key: entityContainer.getKeys()) {
+            Entity asteroid = entityContainer.getEntity(key);
+            String sensorId = "asteroid-sensor-" + key.charAt(key.length() - 1);
+
+            Body sensor = createCircleSensor(
+                    (int)(asteroid.getPosition().x * MyGdxGame.PPM),
+                    (int)(asteroid.getPosition().y * MyGdxGame.PPM),
+                    asteroid.getRadius() * 3,
+                    sensorId
+            );
+
+            sensors.put(sensorId, sensor);
+        }
     }
 
-    public Body createCircleSensor(int x, int y, int width) {
+    private Body createCircleSensor(int x, int y, int radius, String userData) {
         final float PPM = MyGdxGame.PPM;
         Body pBody;
         BodyDef def = new BodyDef();
@@ -31,7 +44,7 @@ public class AsteroidsSensors implements ContactListener {
         pBody = world.createBody(def);
 
         CircleShape shape = new CircleShape();
-        shape.setRadius(width / 2f / PPM);
+        shape.setRadius(radius / PPM);
 
         FixtureDef fdef = new FixtureDef();
         fdef.isSensor = true;
@@ -39,29 +52,57 @@ public class AsteroidsSensors implements ContactListener {
         pBody.createFixture(fdef);
         shape.dispose();
 
-        pBody.setUserData("asteroid-sensor");
+        pBody.setUserData(userData);
         return pBody;
     }
 
-    private boolean isContactBetweenPlayerAndSensor(Contact contact) {
+    private boolean isPlayerInContact(Contact contact) {
         Object fixtureDataA = contact.getFixtureA().getBody().getUserData();
         Object fixtureDataB = contact.getFixtureB().getBody().getUserData();
 
-        return (fixtureDataA.equals("asteroid-sensor") && fixtureDataB.equals("player"))
-            || (fixtureDataB.equals("asteroid-sensor") && fixtureDataA.equals("player"));
+        return (fixtureDataA.equals("player") || fixtureDataB.equals("player"));
+    }
+
+    private Object findSensorInContact(Contact contact) {
+        Object fixtureDataA = contact.getFixtureA().getBody().getUserData();
+        Object fixtureDataB = contact.getFixtureB().getBody().getUserData();
+
+        String fixtureNameA = fixtureDataA.toString();
+        String fixtureNameB = fixtureDataB.toString();
+
+        if(fixtureNameA.contains("asteroid-sensor")) {
+            return fixtureNameA.charAt(fixtureNameA.length() - 1);
+        } else if(fixtureNameB.contains("asteroid-sensor")) {
+            return fixtureNameB.charAt(fixtureNameB.length() -1);
+        }
+
+        return null;
     }
 
     public void beginContact(Contact contact) {
-        if(!isContactBetweenPlayerAndSensor(contact)) {
+        if(!isPlayerInContact(contact)) {
             return;
         }
+
+        Object sensorId = findSensorInContact(contact);
+        if(sensorId == null) {
+            return;
+        }
+        
+        String bodyId = sensorId.toString();
+
+        activeAsteroidBody = entityContainer.getEntity("asteroid-" + bodyId).getBody();
 
         isInGravityField = true;
     }
 
     @Override
     public void endContact(Contact contact) {
-        if(!isContactBetweenPlayerAndSensor(contact)) {
+        if(!isPlayerInContact(contact)) {
+            return;
+        }
+
+        if(findSensorInContact(contact) == null) {
             return;
         }
 
@@ -81,15 +122,15 @@ public class AsteroidsSensors implements ContactListener {
             return;
         }
 
-        double dX = player.getPosition().x - asteroid.getPosition().x;
-		double dY = player.getPosition().y - asteroid.getPosition().y;
+        double dX = player.getPosition().x - activeAsteroidBody.getPosition().x;
+		double dY = player.getPosition().y - activeAsteroidBody.getPosition().y;
 
 		double distanceSquared = Math.abs(
 				Math.pow(dX, 2)
 			  + Math.pow(dY, 2)
 		);
 
-		double planetMass = asteroid.getMass();
+		double planetMass = activeAsteroidBody.getMass();
 		double playerMass = player.getMass();
 
 		double force = MyGdxGame.CONST_G * planetMass * playerMass /2

@@ -18,13 +18,13 @@ class Entity {
 
     private int r;
 
-    private Vector2 position;
-
     Entity(SpriteBatch batch, ShapeRenderer shapeRenderer, String spritePath) {
         this.shapeRenderer = shapeRenderer;
 
         animator = new Animator(batch, spritePath, 0.5f, 4, 1);
     }
+
+    public int getRadius() {return r;}
 
     public void createBody(World world, int x, int y, int d) {
         this.r = d / 2;
@@ -45,20 +45,13 @@ class Entity {
         animator.render(position);
     }
 
-    void changePostion(Vector2 newPostion){
-        this.position = newPostion;
-    }
-
-    public void orbit(Body body2) {
-        body.orbit(body2);
-    }
 
     public Body getBody() {
         return body.getBody();
     }
 
     Vector2 getPosition(){
-        return position;
+        return this.body.getBody().getPosition();
     }
 
     void update() {
