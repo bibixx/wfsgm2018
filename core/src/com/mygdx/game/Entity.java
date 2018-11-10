@@ -15,7 +15,8 @@ public class Entity {
     int w;
     int h;
 
-    Entity(World world, Vector2 position, int r, String spritename) {
+    Entity(World world, Batch batch, Vector2 position, int r, String spritename) {
+        this.batch = batch;
         this.r = r;
         this.w = r * 2;
         this.h = r * 2;
@@ -38,7 +39,8 @@ public class Entity {
     }
 
 
-    Entity(World world, Vector2 position, int w, int h, String spritename) {
+    Entity(World world, Batch batch, Vector2 position, int w, int h, String spritename) {
+        this.batch = batch;
         this.w = w;
         this.h = h;
 
@@ -67,7 +69,7 @@ public class Entity {
         return body;
     }
 
-    public void render(Batch batch) {
+    public void render() {
         batch.draw(texture, body.getPosition().x * PPM - w/2, body.getPosition().y * PPM - h/2, w, h);
     }
 

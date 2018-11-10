@@ -80,7 +80,7 @@ public class MyGdxGame extends Game {
 	}
 
 	private void spawnLevel(Level level) {
-        player = new Entity(world, level.playerPosition, (int)(64f * (61f / 118f)), 64, "laika");
+        player = new Entity(world, batch, level.playerPosition, (int)(64f * (61f / 118f)), 64, "laika");
 
         backgroundTexture = new Texture(level.backgroundPath);
 
@@ -91,7 +91,7 @@ public class MyGdxGame extends Game {
 
 		for(int i = 0; i < level.asteroidsData.length; i++) {
 			AsteroidData data = level.asteroidsData[i];
-			Entity asteroid = new CelestialBody(world, new Vector2(data.position), data.radius, data.texturePath);
+			Entity asteroid = new CelestialBody(world, batch, new Vector2(data.position), data.radius, data.texturePath);
 			entityContainer.addEntity("asteroid-"+i, asteroid);
 		}
 
@@ -123,10 +123,10 @@ public class MyGdxGame extends Game {
 			asteroid.update();
 		}
 
-        player.render(batch);
+        player.render();
 
         for(Entity asteroid : entityContainer.getValues()) {
-        	asteroid.render(batch);
+        	asteroid.render();
 		}
 
 		batch.end();

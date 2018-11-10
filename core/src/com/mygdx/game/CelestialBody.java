@@ -11,8 +11,8 @@ public class CelestialBody extends Entity {
     Texture glowTexture;
     Texture orbitTexture;
 
-    CelestialBody(World world, Vector2 position, int r, String spritename) {
-        super(world, position, r, spritename);
+    CelestialBody(World world, Batch batch, Vector2 position, int r, String spritename) {
+        super(world, batch, position, r, spritename);
 
         this.position = position;
 
@@ -20,7 +20,7 @@ public class CelestialBody extends Entity {
         orbitTexture = new Texture("planet1-orbit.png");
     }
 
-    public void render(Batch batch) {
+    public void render() {
         batch.draw(glowTexture, position.x - w, position.y - h, w * 2, h * 2);
 
         batch.draw(texture, position.x - w/2, position.y - h/2, w, h);
