@@ -34,7 +34,7 @@ public class MyGdxGame extends Game {
 	private int screenWidth, screenHeight;
 
 	private ShapeRenderer shapeRenderer;
-	private Player player;
+	private Entity player;
 
 
     public MyGdxGame(int screenWidth, int screenHeight){
@@ -55,14 +55,17 @@ public class MyGdxGame extends Game {
 		camera.setToOrtho(false, w/2, h/2);
 		Vector3 position = camera.position;
 		position.x = 0;
-		position.y =  100;
+		position.y = 100;
 		camera.position.set(position);
 
 		world = new World(new Vector2(0, 0f), false);
 		b2dr = new Box2DDebugRenderer();
 
 		planet = new CelestialBody(world, 0, 100, 64, false);
-		player = new Player(shapeRenderer, new Vector2(0, 200), batch, new CelestialBody(world, 0, 200, 32, false));
+
+		player = new Entity(batch, shapeRenderer);
+		player.createBody(world, 0, 200, 32);
+
 
 		player.orbit(planet);
 	}
@@ -95,7 +98,7 @@ public class MyGdxGame extends Game {
 		b2dr.dispose();
 		batch.dispose();
 		font.dispose();
-//		player.dispose();
+		player.dispose();
 		shapeRenderer.dispose();
 	}
 
@@ -113,12 +116,10 @@ public class MyGdxGame extends Game {
 		double planetMass = planet.getBody().getMass();
 		double playerMass = player.getBody().getMass();
 
-		double force = CONST_G * planetMass * playerMass
-					 / distanceSquared;
+		double force = CONST_G * planetMass * playerMass / distanceSquared;
 
 		double forceX = (force / Math.sqrt(distanceSquared)) * dX;
         double forceY = (force / Math.sqrt(distanceSquared)) * dY;
-
 
         player.getBody().applyForceToCenter((float)forceX, (float)forceY, true);
 
@@ -144,6 +145,7 @@ public class MyGdxGame extends Game {
 
 	public void cameraUpdate() {
 		Vector3 position = camera.position;
+
 		position.x = player.getBody().getPosition().x * PPM;
 		position.y = player.getBody().getPosition().y * PPM;
 		camera.position.set(position);
