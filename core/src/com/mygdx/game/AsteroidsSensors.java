@@ -204,7 +204,7 @@ public class AsteroidsSensors implements ContactListener {
                 public void run() {
                     restoreLvlCb.run();
                 }
-            }, 2.5f);
+            }, 2.5f);//TODO aaaa
             return;
         }
 
