@@ -54,6 +54,8 @@ public class MyGdxGame extends Game {
 
 	private boolean drawSplashScreen = true;
 
+    SoundManager soundManager2;
+
 	@Override
 	public void create () {
         batch = new SpriteBatch();
@@ -67,16 +69,20 @@ public class MyGdxGame extends Game {
 
         if (!wasSoundManagerCreated) {
             soundManager = new SoundManager();
-            soundManager.setBackgroundMusic("ZSRR.mp3", "ZSRR_LOOP.mp3");
 
+            soundManager.setBackgroundMusic("ZSRR.mp3", "ZSRR_LOOP.mp3");
 
             soundManager.addSound("fail", "fail.mp3");
             soundManager.addSound("success", "success.mp3");
             soundManager.addSound("fail-out-of-bounds", "fail-out-of-bounds.mp3");
 
-            soundManager.playBackgroundMusic();
-
             wasSoundManagerCreated = true;
+
+            soundManager2 = new SoundManager();
+
+            soundManager2.setBackgroundMusic("KALINKA_LOOP.mp3", "KALINKA_LOOP.mp3");
+
+            soundManager2.playBackgroundMusic();
         }
 
         animator = new Animator(grainBatch, "grain-sprite-alpha.png", 1/16f, 4, 1, 0, 1);
@@ -190,8 +196,12 @@ public class MyGdxGame extends Game {
 			Timer.schedule(new Timer.Task() {
 				@Override
 				public void run() {
-					if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
-						drawSplashScreen = false;
+					if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+                        drawSplashScreen = false;
+                        soundManager2.stopBackgroundMusic();
+
+                        soundManager.playBackgroundMusic();
+                    }
 				}
 			}, 1.5f);
 

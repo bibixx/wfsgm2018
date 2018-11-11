@@ -45,15 +45,13 @@ public class SoundManager {
         }
 
         isBackgroundPlaying = true;
+        backgroundMusic1.play();
 
         backgroundMusic1.setOnCompletionListener((Music music) -> {
             System.out.println(1);
             backgroundMusic2.play();
         });
 
-        backgroundMusic1.play();
-
-        backgroundMusic1.play();
         backgroundMusic2.setLooping(true);
 //        if(!backgroundMusic.isLooping())
 //            backgroundMusic.setLooping(true);
