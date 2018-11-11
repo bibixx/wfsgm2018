@@ -18,7 +18,7 @@ public class MyGdxGame extends Game {
 	public static final double CONST_G = -6.67 * Math.pow(10, 1);
 	public static final float PPM = 32;
 
-	private boolean DEBUG = true;
+	private boolean DEBUG = false;
 
 	private OrthographicCamera camera;
 
@@ -154,6 +154,8 @@ public class MyGdxGame extends Game {
         };
 		sensors = new AsteroidsSensors(world, player, entityContainer, restoreLvlCb, loadNextLvlCb, soundManager, camera);
 		world.setContactListener(sensors);
+
+//        player.deathAnimation();
 	}
 
 	@Override
