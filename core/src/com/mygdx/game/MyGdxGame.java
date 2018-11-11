@@ -38,6 +38,7 @@ public class MyGdxGame extends Game {
 	private Player player;
 
 	private SoundManager soundManager;
+	private boolean wasSoundManagerCreated = false;
 
 	private AsteroidsSensors sensors;
 
@@ -55,14 +56,23 @@ public class MyGdxGame extends Game {
         backgroundBatch = new SpriteBatch();
         grainBatch = new SpriteBatch();
 
-        soundManager = new SoundManager();
         levelLoader = new LevelLoader();
 
         grainTexture = new Texture("grain-sprite-alpha.png");
 
-        soundManager.addSound("fail", "sound1.mp3");
-        soundManager.addSound("success", "sound1.mp3");
-        soundManager.addSound("fail-out-of-bounds", "sound1.mp3");
+        if (!wasSoundManagerCreated) {
+            soundManager = new SoundManager();
+            soundManager.setBackgroundMusic("ZSRR.mp3", "ZSRR_LOOP.mp3");
+
+
+            soundManager.addSound("fail", "fail.mp3");
+            soundManager.addSound("success", "success.mp3");
+            soundManager.addSound("fail-out-of-bounds", "fail-out-of-bounds.mp3");
+
+            soundManager.playBackgroundMusic();
+
+            wasSoundManagerCreated = true;
+        }
 
         animator = new Animator(grainBatch, "grain-sprite-alpha.png", 1/16f, 4, 1, 0, 1);
 

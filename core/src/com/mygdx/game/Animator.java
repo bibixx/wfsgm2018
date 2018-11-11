@@ -28,7 +28,7 @@ class Animator {
     }
 
     void setDrawingSpriteSheet(int frameCol, int frameRows, int startingRow, int rowsToShow){
-        System.out.println(spriteSheet.getWidth()/ frameCol);
+//        System.out.println(spriteSheet.getWidth()/ frameCol);
         TextureRegion[][] tmp = TextureRegion.split(spriteSheet, spriteSheet.getWidth()/ frameCol, spriteSheet.getHeight()/ frameRows);
         TextureRegion[] animationFrames = new TextureRegion[frameCol * rowsToShow];
 

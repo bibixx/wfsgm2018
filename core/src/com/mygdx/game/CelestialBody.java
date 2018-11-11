@@ -30,9 +30,8 @@ public class CelestialBody extends Entity {
         invertedTexture = new Texture(spritename + "-invert.png");
 
         glowTexture = new Texture(spritename + "-glow.png");
-        invertedGlowTexture = new Texture(spritename + "-glow-invert.png");
 
-        orbitTexture = new Texture("planet1-orbit.png");
+        orbitTexture = new Texture("orbit.png");
     }
 
     public void render() {
@@ -42,13 +41,11 @@ public class CelestialBody extends Entity {
         int wO = w * 3;
         int hO = h * 3;
 
-        if (!Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            batch.draw(glowTexture, position.x - wG, position.y - hG, wG * 2, hG * 2);
+        batch.draw(glowTexture, position.x - wG, position.y - hG, wG * 2, hG * 2);
 
+        if (!Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             batch.draw(texture, position.x - w/2, position.y - h/2, w, h);
         } else {
-            batch.draw(invertedGlowTexture, position.x - wG, position.y - hG, wG * 2, hG * 2);
-
             batch.draw(invertedTexture, position.x - w/2, position.y - h/2, w, h);
         }
 
