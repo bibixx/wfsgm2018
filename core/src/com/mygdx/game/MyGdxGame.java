@@ -18,7 +18,7 @@ public class MyGdxGame extends Game {
 	public static final double CONST_G = -6.67 * Math.pow(10, 1);
 	public static final float PPM = 32;
 
-	private boolean DEBUG = false;
+	private boolean DEBUG = true;
 
 	private OrthographicCamera camera;
 
@@ -66,13 +66,24 @@ public class MyGdxGame extends Game {
                 new AsteroidData(new Vector2(550, 500), 32, "planet3")
             },
             new AsteroidData[]{
-                    new AsteroidData(new Vector2(-300, 100), 32, "planet1"),
+                new AsteroidData(new Vector2(500, 450), 16, "planet1"),
+                new AsteroidData(new Vector2(400, 350), 32, "planet2"),
+                new AsteroidData(new Vector2(230, 180), 48, "planet3"),
+                new AsteroidData(new Vector2(-350, 240), 64, "planet1"),
+                new AsteroidData(new Vector2(800, -150), 32, "planet2"),
+                new AsteroidData(new Vector2(-450, -200), 16, "planet3"),
+                new AsteroidData(new Vector2(-300, -160), 16, "planet2"),
+                new AsteroidData(new Vector2(-580, -120), 25, "planet1"),
+                new AsteroidData(new Vector2(-530, -50), 16, "planet3"),
+                new AsteroidData(new Vector2(-800, 200), 45, "planet2"),
+                new AsteroidData(new Vector2(0, 350), 32, "planet2"),
+                new AsteroidData(new Vector2(150, -260), 80, "planet2")
             },
         };
 
 		level = new Level(
-				new Vector2(-900, 500),
-                new Vector2(5.3f, -4.8f),
+				new Vector2(- Gdx.graphics.getWidth() / 2 + 64 , 0),
+                new Vector2(5.3f, 0),
                 levels[currentLevel],
 				"bg.jpg"
 		);
@@ -84,7 +95,7 @@ public class MyGdxGame extends Game {
 		camera.setToOrtho(false, w, h);
 		Vector3 position = camera.position;
 		position.x = 0;
-		position.y = 100;
+		position.y = 0;
 		camera.position.set(position);
 
 		world = new World(new Vector2(0, 0f), false);
@@ -94,11 +105,10 @@ public class MyGdxGame extends Game {
 	}
 
 	private void spawnLevel(Level level) {
-        player = new Player(world, batch, level.playerPosition, (int)(64f * (61f / 118f)), 64, "laika");
+        player = new Player(world, batch, level.playerPosition, level.initialPlayerVelocity, (int)(64f * (61f / 118f)), 64, "laika");
 
         backgroundTexture = new Texture(level.backgroundPath);
 
-		player.getBody().setLinearVelocity(level.initialPlayerVelocity.x, level.initialPlayerVelocity.y);
 		player.getBody().setUserData("player");
 
 		entityContainer = new EntityContainer();
@@ -109,7 +119,12 @@ public class MyGdxGame extends Game {
 			entityContainer.addEntity("asteroid-"+i, asteroid);
 		}
 
-		sensors = new AsteroidsSensors(world, player.getBody(), entityContainer);
+		Runnable restoreLvlCb = () -> create();
+		Runnable loadNextLvlCb = () -> {
+		    currentLevel++;
+		    create();
+        };
+		sensors = new AsteroidsSensors(world, player, entityContainer, restoreLvlCb, loadNextLvlCb);
 		world.setContactListener(sensors);
 	}
 
@@ -151,6 +166,11 @@ public class MyGdxGame extends Game {
         if(Gdx.input.isKeyJustPressed(Input.Keys.R)) create();
         if(Gdx.input.isKeyJustPressed(Input.Keys.N)) {
             currentLevel++;
+            create();
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+            currentLevel--;
             create();
         }
 

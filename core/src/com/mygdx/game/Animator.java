@@ -17,23 +17,23 @@ class Animator {
 
     private float frameDuration;
 
-    Animator(Batch batch, String spritePath, float frameDuration, int frameCol, int frameRows){
+    Animator(Batch batch, String spritePath, float frameDuration, int frameCol, int frameRows, int startingRow, int rowsToShow){
         this.batch = batch;
 
         this.frameDuration = frameDuration;
 
         spriteSheet = new Texture(Gdx.files.internal(spritePath));
 
-        setDrawingSpriteSheet(frameCol, frameRows);
+        setDrawingSpriteSheet(frameCol, frameRows, startingRow, rowsToShow);
     }
 
-    void setDrawingSpriteSheet(int frameCol, int frameRows){
+    void setDrawingSpriteSheet(int frameCol, int frameRows, int startingRow, int rowsToShow){
         TextureRegion[][] tmp = TextureRegion.split(spriteSheet, spriteSheet.getWidth()/ frameCol, spriteSheet.getHeight()/ frameRows);
-        TextureRegion[] animationFrames = new TextureRegion[frameCol * frameRows];
+        TextureRegion[] animationFrames = new TextureRegion[frameCol * rowsToShow];
 
         int index = 0;
 
-        for (int i = 0; i < frameRows; i++) {
+        for (int i = startingRow; i < startingRow + rowsToShow; i++) {
             for (int j = 0; j < frameCol; j++) {
                 animationFrames[index++] = tmp[i][j];
             }
