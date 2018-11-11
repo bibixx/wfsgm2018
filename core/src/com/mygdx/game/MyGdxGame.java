@@ -37,17 +37,17 @@ public class MyGdxGame extends Game {
 	private ShapeRenderer shapeRenderer;
 	private Player player;
 
-	SoundManager soundManager;
+	private SoundManager soundManager;
 
 	private AsteroidsSensors sensors;
 
-	EntityContainer entityContainer;
+	private EntityContainer entityContainer;
 
 	private LevelLoader levelLoader;
 
-	private int currentLevel = 2;
+	private int currentLevel = 0;
 
-	Animator animator;
+	private Animator animator;
 
 	@Override
 	public void create () {
@@ -153,6 +153,8 @@ public class MyGdxGame extends Game {
             soundManager.playSound("success");
 
             currentLevel++;
+            currentLevel %= levelLoader.getLevelArray().size;
+
             dispose();
             create();
         };
@@ -198,11 +200,14 @@ public class MyGdxGame extends Game {
         if(Gdx.input.isKeyJustPressed(Input.Keys.R)) create();
         if(Gdx.input.isKeyJustPressed(Input.Keys.N)) {
             currentLevel++;
+            currentLevel %= levelLoader.getLevelArray().size;
             create();
         }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
             currentLevel--;
+            if(currentLevel < 0)
+            	currentLevel = levelLoader.getLevelArray().size - 1;
             create();
         }
 

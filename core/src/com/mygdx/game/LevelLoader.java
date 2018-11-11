@@ -23,4 +23,8 @@ class LevelLoader {
     void addLevel(Level newLevel){
         levelsContainer.add(newLevel);
     }
+
+    Array<Level> getLevelArray(){
+        return levelsContainer;
+    }
 }
