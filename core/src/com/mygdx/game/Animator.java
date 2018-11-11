@@ -49,7 +49,16 @@ class Animator {
 
         TextureRegion currentFrame = animation.getKeyFrame(stateTime, true);
 
-        batch.draw(currentFrame, position.x, position.y);
+        batch.draw(currentFrame, position.x, position.y, 100, 100);
+    }
+
+
+    void render(Vector2 position, int w, int h){
+        stateTime += Gdx.graphics.getDeltaTime();
+
+        TextureRegion currentFrame = animation.getKeyFrame(stateTime, true);
+
+        batch.draw(currentFrame, position.x, position.y, w, h);
     }
 
     void update(){

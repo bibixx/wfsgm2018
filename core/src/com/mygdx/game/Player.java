@@ -10,9 +10,11 @@ public class Player extends Entity {
 
     private Vector2 initialPosition;
     private Vector2 initialSpeed;
+    private SoundManager soundManager;
 
-    Player(World world, Batch batch, Vector2 position, Vector2 speed, int w, int h, String spritename){
+    Player(World world, Batch batch, Vector2 position, Vector2 speed, int w, int h, String spritename, SoundManager soundManager){
         super(world, batch, position, w, h, spritename);
+        this.soundManager = soundManager;
         initialPosition = position;
         initialSpeed = speed;
         body.setLinearVelocity(speed.x, speed.y);
@@ -20,6 +22,8 @@ public class Player extends Entity {
     }
 
     void deathAnimation(){
+        soundManager.playSound("fail");
+
         animator.setDrawingSpriteSheet(4, 2, 1, 1);
     }
 
@@ -27,7 +31,7 @@ public class Player extends Entity {
     public void render(){
         super.render();
         Vector2 fixedPosition = new Vector2(body.getPosition().x * PPM - w/2, body.getPosition().y * PPM - h/2);
-        animator.render(fixedPosition);
+        animator.render(fixedPosition, w, h);
     }
 
     @Override

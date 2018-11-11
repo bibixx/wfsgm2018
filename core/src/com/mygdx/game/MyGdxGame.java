@@ -37,6 +37,8 @@ public class MyGdxGame extends Game {
 	private ShapeRenderer shapeRenderer;
 	private Player player;
 
+	SoundManager soundManager;
+
 	private AsteroidsSensors sensors;
 
 	EntityContainer entityContainer;
@@ -51,7 +53,11 @@ public class MyGdxGame extends Game {
         backgroundBatch = new SpriteBatch();
         grainBatch = new SpriteBatch();
 
+        soundManager = new SoundManager();
+
         grainTexture = new Texture("grain-sprite-alpha.png");
+
+        soundManager.addSound("fail", "sound1.mp3");
 
 		font = new BitmapFont();
 		shapeRenderer = new ShapeRenderer();
@@ -105,7 +111,7 @@ public class MyGdxGame extends Game {
 	}
 
 	private void spawnLevel(Level level) {
-        player = new Player(world, batch, level.playerPosition, level.initialPlayerVelocity, (int)(64f * (61f / 118f)), 64, "laika");
+        player = new Player(world, batch, level.playerPosition, level.initialPlayerVelocity, (int)(64f * (61f / 118f)), 64, "laika", soundManager);
 
         backgroundTexture = new Texture(level.backgroundPath);
 
@@ -119,10 +125,17 @@ public class MyGdxGame extends Game {
 			entityContainer.addEntity("asteroid-"+i, asteroid);
 		}
 
-		Runnable restoreLvlCb = () -> create();
-		Runnable loadNextLvlCb = () -> {
-		    currentLevel++;
+		Runnable restoreLvlCb = () -> {
+            dispose();
 		    create();
+        };
+
+		Runnable loadNextLvlCb = () -> {
+            soundManager.playSound("fail");
+
+            currentLevel++;
+            dispose();
+            create();
         };
 		sensors = new AsteroidsSensors(world, player, entityContainer, restoreLvlCb, loadNextLvlCb);
 		world.setContactListener(sensors);
