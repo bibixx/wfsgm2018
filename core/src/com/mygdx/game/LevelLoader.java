@@ -9,7 +9,7 @@ class LevelLoader {
     private Level currentLevel;
 
     LevelLoader(){
-        levelsContainer = new Array<>();
+        levelsContainer = new Array<Level>();
     }
 
     void setCurrentLevel(int levelIndex){
