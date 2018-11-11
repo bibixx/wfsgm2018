@@ -152,7 +152,7 @@ public class MyGdxGame extends Game {
             dispose();
             create();
         };
-		sensors = new AsteroidsSensors(world, player, entityContainer, restoreLvlCb, loadNextLvlCb, soundManager);
+		sensors = new AsteroidsSensors(world, player, entityContainer, restoreLvlCb, loadNextLvlCb, soundManager, camera);
 		world.setContactListener(sensors);
 	}
 
@@ -205,11 +205,6 @@ public class MyGdxGame extends Game {
         grainBatch.begin();
         animator.render(new Vector2(0, 0), Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         grainBatch.end();
-
-
-//        grainBatch.begin();
-//        grainBatch.draw(grainTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-//        grainBatch.end();
 	}
 
 	@Override

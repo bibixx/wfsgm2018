@@ -2,10 +2,13 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.Timer;
+
+import static com.badlogic.gdx.math.MathUtils.random;
 
 public class AsteroidsSensors implements ContactListener {
 
@@ -21,8 +24,12 @@ public class AsteroidsSensors implements ContactListener {
     private Runnable loadNextLvlCb;
     private boolean shouldLoadNextLvl;
     private SoundManager soundManager;
+    private OrthographicCamera camera;
+    float shakeElapsed;
+    float shakeDuration;
+    float shakeIntensity;
 
-    public AsteroidsSensors(World _world, Player _player, EntityContainer _entityContainer, Runnable _restoreLblCb, Runnable _loadNextLevelCb, SoundManager soundManager) {
+    public AsteroidsSensors(World _world, Player _player, EntityContainer _entityContainer, Runnable _restoreLblCb, Runnable _loadNextLevelCb, SoundManager soundManager, OrthographicCamera camera) {
         world = _world;
         player = _player;
         entityContainer = _entityContainer;
@@ -30,6 +37,7 @@ public class AsteroidsSensors implements ContactListener {
         sensors = new ArrayMap<String, Body>();
         loadNextLvlCb = _loadNextLevelCb;
         this.soundManager = soundManager;
+        this.camera = camera;
 
         for (String key: entityContainer.getKeys()) {
             Entity asteroid = entityContainer.getEntity(key);
@@ -180,9 +188,12 @@ public class AsteroidsSensors implements ContactListener {
     }
 
     public void update() {
+        updateCamera();
+
         if(shouldRestorePlayer) {
             if(didPlayerHitCelestial) {
                 player.deathAnimation();
+                shake(10, 500);
             } else {
                 soundManager.playSound("fail-out-of-bounds");
             }
@@ -230,5 +241,34 @@ public class AsteroidsSensors implements ContactListener {
 
 
         player.getBody().applyForceToCenter((float)forceX, (float)forceY, true);
+    }
+    /**
+     * Start the screen shaking with a given power and shakeDuration
+     * @param intensity How much shakeIntensity should the shaking use.
+     * @param duration Time in milliseconds the screen should shake.
+     */
+    public void shake(float intensity, float duration) {
+        this.shakeElapsed = 0;
+        this.shakeDuration = duration / 1000f;
+        this.shakeIntensity = intensity;
+    }
+
+    /**
+     * Updates the shake and the camera.
+     * This must be called prior to camera.update()
+     */
+    public void updateCamera() {
+        // Only shake when required.
+        if(shakeElapsed < shakeDuration) {
+
+            // Calculate the amount of shake based on how long it has been shaking already
+            float currentPower = shakeIntensity * camera.zoom * ((shakeDuration - shakeElapsed) / shakeDuration);
+            float x = (random.nextFloat() - 0.5f) * 2 * currentPower;
+            float y = (random.nextFloat() - 0.5f) * 2 * currentPower;
+            camera.translate(-x, -y);
+
+            // Increase the elapsed time by the delta provided.
+            shakeElapsed += Gdx.graphics.getDeltaTime();
+        }
     }
 }
