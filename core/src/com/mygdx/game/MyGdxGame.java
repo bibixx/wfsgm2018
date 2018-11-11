@@ -65,7 +65,7 @@ public class MyGdxGame extends Game {
         soundManager.addSound("success", "sound1.mp3");
         soundManager.addSound("fail-out-of-bounds", "sound1.mp3");
 
-        animator = new Animator(grainBatch, "grain-sprite-alpha.png", 0.5f, 2, 1, 0, 1);
+        animator = new Animator(grainBatch, "grain-sprite-alpha.png", 1/16f, 4, 1, 0, 1);
 
         font = new BitmapFont();
 		shapeRenderer = new ShapeRenderer();
