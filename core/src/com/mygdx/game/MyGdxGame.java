@@ -122,7 +122,8 @@ public class MyGdxGame extends Game {
 		for(int i = 0; i < level.asteroidsData.length; i++) {
 			AsteroidData data = level.asteroidsData[i];
 			Entity asteroid = new CelestialBody(world, batch, new Vector2(data.position), data.radius, data.texturePath);
-			entityContainer.addEntity("asteroid-"+i, asteroid);
+			String key = "asteroid-"+(i<10 ? "0"+i : i);
+			entityContainer.addEntity(key, asteroid);
 		}
 
 		Runnable restoreLvlCb = () -> {

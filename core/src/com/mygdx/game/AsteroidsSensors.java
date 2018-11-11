@@ -31,7 +31,7 @@ public class AsteroidsSensors implements ContactListener {
 
         for (String key: entityContainer.getKeys()) {
             Entity asteroid = entityContainer.getEntity(key);
-            String sensorId = "asteroid-sensor-" + key.charAt(key.length() - 1);
+            String sensorId = "asteroid-sensor-" + key.substring(key.length() - 2);
 
             Body sensor = createCircleSensor(
                     (int)(asteroid.getBody().getPosition().x * MyGdxGame.PPM),
@@ -114,9 +114,9 @@ public class AsteroidsSensors implements ContactListener {
         String fixtureNameB = fixtureDataB.toString();
 
         if(fixtureNameA.contains("asteroid-sensor")) {
-            return fixtureNameA.charAt(fixtureNameA.length() - 1);
+            return fixtureNameA.substring(fixtureNameA.length()-2);
         } else if(fixtureNameB.contains("asteroid-sensor")) {
-            return fixtureNameB.charAt(fixtureNameB.length() -1);
+            return fixtureNameB.substring(fixtureNameB.length()-2);
         }
 
         return null;
