@@ -1,23 +1,19 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.utils.Queue;
+import com.badlogic.gdx.utils.Array;
 
 class LevelLoader {
 
-    private Queue<Level> levelsQueue;
+    private Array<Level> levelsContainer;
 
     private Level currentLevel;
 
     LevelLoader(){
-        levelsQueue = new Queue<Level>();
+        levelsContainer = new Array<>();
     }
 
-    Level nextLevel(){
-        return levelsQueue.last();
-    }
-
-    void changeCurrentLevel(){
-        currentLevel = levelsQueue.removeLast();
+    void setCurrentLevel(int levelIndex){
+        currentLevel = levelsContainer.get(levelIndex);
     }
 
     Level getCurrentLevel(){
@@ -25,6 +21,6 @@ class LevelLoader {
     }
 
     void addLevel(Level newLevel){
-        levelsQueue.addFirst(newLevel);
+        levelsContainer.add(newLevel);
     }
 }
