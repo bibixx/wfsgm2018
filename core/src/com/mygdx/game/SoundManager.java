@@ -22,10 +22,10 @@ public class SoundManager {
 
     void setBackgroundMusic(String musicPath1, String musicPath2){
         backgroundMusic1 = Gdx.audio.newMusic(Gdx.files.internal(musicPath1));
-        backgroundMusic1.setVolume(0.5f);
+        backgroundMusic1.setVolume(0.4f);
 
         backgroundMusic2 = Gdx.audio.newMusic(Gdx.files.internal(musicPath2));
-        backgroundMusic2.setVolume(0.5f);
+        backgroundMusic2.setVolume(0.4f);
     }
 
     void addSound(String soundName, String soundPath){
@@ -46,13 +46,10 @@ public class SoundManager {
         backgroundMusic1.play();
 
         backgroundMusic1.setOnCompletionListener((Music music) -> {
-            System.out.println(1);
             backgroundMusic2.play();
         });
 
         backgroundMusic2.setLooping(true);
-//        if(!backgroundMusic.isLooping())
-//            backgroundMusic.setLooping(true);
     }
 
     void stopBackgroundMusic(){

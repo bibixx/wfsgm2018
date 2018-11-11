@@ -173,16 +173,19 @@ public class MyGdxGame extends Game {
 		Runnable loadNextLvlCb = () -> {
             soundManager.playSound("success");
 
-            currentLevel++;
-            currentLevel %= levelLoader.getLevelArray().size;
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    currentLevel++;
+                    currentLevel %= levelLoader.getLevelArray().size;
 
-            dispose();
-            create();
+                    dispose();
+                    create();
+                }
+            }, 2f);
         };
 		sensors = new AsteroidsSensors(world, player, entityContainer, restoreLvlCb, loadNextLvlCb, soundManager, camera);
 		world.setContactListener(sensors);
-
-//        player.deathAnimation();
 	}
 
 	@Override
