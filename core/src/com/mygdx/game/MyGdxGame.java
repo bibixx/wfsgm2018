@@ -47,8 +47,6 @@ public class MyGdxGame extends Game {
 
 	private int currentLevel = 0;
 
-	Level level;
-
 	@Override
 	public void create () {
         batch = new SpriteBatch();
@@ -65,39 +63,40 @@ public class MyGdxGame extends Game {
 		font = new BitmapFont();
 		shapeRenderer = new ShapeRenderer();
 
-        AsteroidData[][] levels = {
-            new AsteroidData[]{
-                new AsteroidData(new Vector2(-300, 100), 32, "planet1"),
-                new AsteroidData(new Vector2(100, 300), 64, "planet2"),
-                new AsteroidData(new Vector2(400, -50), 56, "planet3"),
-                new AsteroidData(new Vector2(-400, -300), 64, "planet2"),
-                new AsteroidData(new Vector2(-600, 450), 64, "planet1"),
-                new AsteroidData(new Vector2(550, 500), 32, "planet3")
-            },
-            new AsteroidData[]{
-                new AsteroidData(new Vector2(500, 450), 16, "planet1"),
-                new AsteroidData(new Vector2(400, 350), 32, "planet2"),
-                new AsteroidData(new Vector2(230, 180), 48, "planet3"),
-                new AsteroidData(new Vector2(-350, 240), 64, "planet1"),
-                new AsteroidData(new Vector2(800, -150), 32, "planet2"),
-                new AsteroidData(new Vector2(-450, -200), 16, "planet3"),
-                new AsteroidData(new Vector2(-300, -160), 16, "planet2"),
-                new AsteroidData(new Vector2(-580, -120), 25, "planet1"),
-                new AsteroidData(new Vector2(-530, -50), 16, "planet3"),
-                new AsteroidData(new Vector2(-800, 200), 45, "planet2"),
-                new AsteroidData(new Vector2(0, 350), 32, "planet2"),
-                new AsteroidData(new Vector2(150, -260), 80, "planet2")
-            },
+        Level[] levels = {
+            new Level(new Vector2(-Gdx.graphics.getWidth() / 2f + 64f, 0), new Vector2(5.3f, 0),
+				new AsteroidData[]{
+                new AsteroidData(new Vector2(-300,0), 32, "planet1"),
+                new AsteroidData(new Vector2(100, 100), 64, "planet2"),
+                new AsteroidData(new Vector2(400, -150), 56, "planet3"),
+                new AsteroidData(new Vector2(-400, -400), 64, "planet2"),
+                new AsteroidData(new Vector2(-600, 350), 64, "planet1"),
+                new AsteroidData(new Vector2(550, 400), 32, "planet3")
+            	}, "bg.jpg"),
+			new Level(new Vector2(-Gdx.graphics.getWidth() / 2f + 64f, -Gdx.graphics.getHeight() / 2f + 150f), new Vector2(5.3f, 0),
+				new AsteroidData[]{
+					new AsteroidData(new Vector2(500, 350), 16, "planet1"),
+					new AsteroidData(new Vector2(400, 250), 32, "planet2"),
+					new AsteroidData(new Vector2(230, 80), 48, "planet3"),
+					new AsteroidData(new Vector2(-350, 140), 64, "planet1"),
+					new AsteroidData(new Vector2(800, -250), 32, "planet2"),
+					new AsteroidData(new Vector2(-450, -300), 16, "planet3"),
+					new AsteroidData(new Vector2(-300, -260), 16, "planet2"),
+					new AsteroidData(new Vector2(-580, -220), 25, "planet1"),
+					new AsteroidData(new Vector2(-530, -150), 16, "planet3"),
+					new AsteroidData(new Vector2(-800, 100), 45, "planet2"),
+					new AsteroidData(new Vector2(0, 250), 32, "planet2"),
+					new AsteroidData(new Vector2(150, -360), 80, "planet2")
+				}, "bg.jpg"),
+			new Level(new Vector2(-Gdx.graphics.getWidth() / 2f + 64f, 0), new Vector2(5.3f, 0),
+				new AsteroidData[]{
+					new AsteroidData(new Vector2(0, 0), 55, "planet1"),
+					new AsteroidData(new Vector2(200, -150), 25, "asteroid"),
+				}, "bg.jpg")
         };
 
-        for(AsteroidData[] iter : levels) {
-			level = new Level(
-					new Vector2(-Gdx.graphics.getWidth() / 2 + 64, 0),
-					new Vector2(5.3f, 0),
-					iter,
-					"bg.jpg"
-			);
-			levelLoader.addLevel(level);
+        for(Level iter : levels) {
+			levelLoader.addLevel(iter);
 		}
 
 		levelLoader.setCurrentLevel(currentLevel);
