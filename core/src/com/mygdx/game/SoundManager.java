@@ -38,8 +38,6 @@ public class SoundManager {
     }
 
     void playBackgroundMusic(){
-//        System.out.println(isBackgroundPlaying);
-
         if (isBackgroundPlaying) {
             return;
         }
