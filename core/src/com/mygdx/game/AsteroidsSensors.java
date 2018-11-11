@@ -17,7 +17,7 @@ public class AsteroidsSensors implements ContactListener {
     private ArrayMap<String, Body> sensors;
     private boolean isInGravityField = false;
     private EntityContainer entityContainer;
-    private Body activeAsteroidBody;
+    private Entity activeAsteroid;
     private boolean shouldRestorePlayer;
     private Runnable restoreLvlCb;
     private boolean didPlayerHitCelestial;
@@ -161,7 +161,7 @@ public class AsteroidsSensors implements ContactListener {
     }
 
     private void handlePlayerSensorContactBegin(String bodyId) {
-        activeAsteroidBody = entityContainer.getEntity("asteroid-" + bodyId).getBody();
+        activeAsteroid = entityContainer.getEntity("asteroid-" + bodyId);
 
         isInGravityField = true;
     }
@@ -218,16 +218,17 @@ public class AsteroidsSensors implements ContactListener {
         }
 
 
-        double dX = player.getBody().getPosition().x - activeAsteroidBody.getPosition().x;
-		double dY = player.getBody().getPosition().y - activeAsteroidBody.getPosition().y;
+        double dX = player.getBody().getPosition().x - activeAsteroid.getBody().getPosition().x;
+		double dY = player.getBody().getPosition().y - activeAsteroid.getBody().getPosition().y;
 
 		double distanceSquared = Math.abs(
 				Math.pow(dX, 2)
 			  + Math.pow(dY, 2)
 		);
 
-		double planetMass = activeAsteroidBody.getMass();
+
 		double playerMass = player.getBody().getMass();
+        	double planetMass = activeAsteroid.getArea() / player.getArea()  * playerMass;
 
 		double force = MyGdxGame.CONST_G * planetMass * playerMass /2
 					 / distanceSquared;

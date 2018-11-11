@@ -32,7 +32,7 @@ public class Player extends Entity {
         super.render();
         Vector2 fixedPosition = new Vector2(body.getPosition().x * PPM - w/2, body.getPosition().y * PPM - h/2);
         animator.render(fixedPosition, w, h);
-    }
+}
 
     @Override
     public void dispose(){

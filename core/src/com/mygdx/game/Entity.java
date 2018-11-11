@@ -24,7 +24,7 @@ public class Entity {
         this.h = r * 2;
 
         BodyDef def = new BodyDef();
-        def.type = BodyDef.BodyType.DynamicBody;
+        def.type = BodyDef.BodyType.StaticBody;
 
         def.position.set(position.x / PPM, position.y / PPM);
         def.fixedRotation = true;
@@ -65,6 +65,13 @@ public class Entity {
 
     public int getRadius() {
         return r;
+    }
+
+    public double getArea() {
+        if(r!=0) {
+            return Math.PI * Math.pow(r, 2);
+        }
+        return w * h;
     }
 
     public Body getBody() {
