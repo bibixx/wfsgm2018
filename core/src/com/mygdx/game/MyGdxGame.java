@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Timer;
 
 public class MyGdxGame extends Game {
 	public static final double CONST_G = -6.67 * Math.pow(10, 1);
@@ -32,6 +33,7 @@ public class MyGdxGame extends Game {
 	private BitmapFont font;
 
 	private Texture backgroundTexture;
+	private Texture splashScreen;
 	private Texture grainTexture;
 
 	private ShapeRenderer shapeRenderer;
@@ -49,6 +51,8 @@ public class MyGdxGame extends Game {
 
 	private Animator animator;
 
+	private boolean drawSplashScreen = true;
+
 	@Override
 	public void create () {
         batch = new SpriteBatch();
@@ -59,6 +63,7 @@ public class MyGdxGame extends Game {
         levelLoader = new LevelLoader();
 
         grainTexture = new Texture("grain-sprite-alpha.png");
+        splashScreen = new Texture("splashScreen.png");
 
         soundManager.addSound("fail", "sound1.mp3");
         soundManager.addSound("success", "sound1.mp3");
@@ -167,10 +172,27 @@ public class MyGdxGame extends Game {
 	@Override
 	public void render() {
 		super.render();
+		if(drawSplashScreen) {
+			backgroundBatch.begin();
+			backgroundBatch.draw(splashScreen, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			backgroundBatch.end();
+
+			Timer.schedule(new Timer.Task() {
+				@Override
+				public void run() {
+					if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
+						drawSplashScreen = false;
+				}
+			}, 1.5f);
+
+			return;
+		}
+
 		update(Gdx.graphics.getDeltaTime());
 
 		Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
 
         backgroundBatch.begin();
         backgroundBatch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -226,6 +248,7 @@ public class MyGdxGame extends Game {
 		font.dispose();
 		player.dispose();
 		shapeRenderer.dispose();
+		splashScreen.dispose();
 	}
 
 	public void update(float delta) {
