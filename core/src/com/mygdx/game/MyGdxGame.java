@@ -18,7 +18,7 @@ public class MyGdxGame extends Game {
 	public static final double CONST_G = -6.67 * Math.pow(10, 1);
 	public static final float PPM = 32;
 
-	private boolean DEBUG = true;
+	private boolean DEBUG = false;
 
 	private OrthographicCamera camera;
 
@@ -45,10 +45,9 @@ public class MyGdxGame extends Game {
 
 	private LevelLoader levelLoader;
 
-	private int currentLevel = 0;
+	private int currentLevel = 2;
 
 	Animator animator;
-	Level level;
 
 	@Override
 	public void create () {
@@ -71,7 +70,7 @@ public class MyGdxGame extends Game {
 		shapeRenderer = new ShapeRenderer();
 
         Level[] levels = {
-            new Level(new Vector2(-Gdx.graphics.getWidth() / 2f + 64f, 0), new Vector2(5.3f, 0),
+            new Level(new Vector2(-Gdx.graphics.getWidth() / 2f + 64f, 150), new Vector2(5.3f, 0),
 				new AsteroidData[]{
                 new AsteroidData(new Vector2(-300,0), 32, "planet1"),
                 new AsteroidData(new Vector2(100, 100), 64, "planet2"),
@@ -80,25 +79,30 @@ public class MyGdxGame extends Game {
                 new AsteroidData(new Vector2(-600, 350), 64, "planet1"),
                 new AsteroidData(new Vector2(550, 400), 32, "planet3")
             	}, "bg.jpg"),
-			new Level(new Vector2(-Gdx.graphics.getWidth() / 2f + 64f, -Gdx.graphics.getHeight() / 2f + 150f), new Vector2(5.3f, 0),
+			new Level(new Vector2(-Gdx.graphics.getWidth() / 2f + 64f, -Gdx.graphics.getHeight() / 2f + 150f), new Vector2(3.3f, 7.2f),
 				new AsteroidData[]{
-					new AsteroidData(new Vector2(500, 350), 16, "planet1"),
-					new AsteroidData(new Vector2(400, 250), 32, "planet2"),
+					new AsteroidData(new Vector2(500, 350), 16, "asteroid"),
+					new AsteroidData(new Vector2(400, 250), 32, "asteroid"),
 					new AsteroidData(new Vector2(230, 80), 48, "planet3"),
-					new AsteroidData(new Vector2(-350, 140), 64, "planet1"),
+					new AsteroidData(new Vector2(-350, 140), 64, "black-hole"),
 					new AsteroidData(new Vector2(800, -250), 32, "planet2"),
-					new AsteroidData(new Vector2(-450, -300), 16, "planet3"),
-					new AsteroidData(new Vector2(-300, -260), 16, "planet2"),
+					new AsteroidData(new Vector2(-450, -300), 16, "asteroid"),
+					new AsteroidData(new Vector2(-300, -260), 16, "asteroid"),
 					new AsteroidData(new Vector2(-580, -220), 25, "planet1"),
 					new AsteroidData(new Vector2(-530, -150), 16, "planet3"),
 					new AsteroidData(new Vector2(-800, 100), 45, "planet2"),
 					new AsteroidData(new Vector2(0, 250), 32, "planet2"),
-					new AsteroidData(new Vector2(150, -360), 80, "planet2")
+					new AsteroidData(new Vector2(150, -360), 80, "black-hole")
 				}, "bg.jpg"),
-			new Level(new Vector2(-Gdx.graphics.getWidth() / 2f + 64f, 0), new Vector2(5.3f, 0),
+			new Level(new Vector2(-Gdx.graphics.getWidth() / 2f + 64f, Gdx.graphics.getHeight() / 2f - 100), new Vector2(3.3f, -1.8f),
 				new AsteroidData[]{
-					new AsteroidData(new Vector2(0, 0), 55, "planet1"),
-					new AsteroidData(new Vector2(200, -150), 25, "asteroid"),
+					new AsteroidData(new Vector2(0, -212), 60, "black-hole"),
+					new AsteroidData(new Vector2(270, -150), 25, "asteroid"),
+					new AsteroidData(new Vector2(-350, 250), 33, "planet1"),
+					new AsteroidData(new Vector2(-380, -80), 48, "asteroid"),
+					new AsteroidData(new Vector2(340, 222), 53, "planet2"),
+					new AsteroidData(new Vector2(85, 189), 25, "planet3"),
+					new AsteroidData(new Vector2(400, -30), 13, "planet1"),
 				}, "bg.jpg")
         };
 
