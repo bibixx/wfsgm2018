@@ -66,7 +66,18 @@ public class MyGdxGame extends Game {
                 new AsteroidData(new Vector2(550, 500), 32, "planet3")
             },
             new AsteroidData[]{
-                    new AsteroidData(new Vector2(-300, 100), 32, "planet1"),
+                new AsteroidData(new Vector2(500, 450), 16, "planet1"),
+                new AsteroidData(new Vector2(400, 350), 32, "planet2"),
+                new AsteroidData(new Vector2(230, 180), 48, "planet3"),
+                new AsteroidData(new Vector2(-350, 240), 64, "planet1"),
+                new AsteroidData(new Vector2(800, -150), 32, "planet2"),
+                new AsteroidData(new Vector2(-450, -200), 16, "planet3"),
+                new AsteroidData(new Vector2(-300, -160), 16, "planet2"),
+                new AsteroidData(new Vector2(-580, -120), 25, "planet1"),
+                new AsteroidData(new Vector2(-530, -50), 16, "planet3"),
+                new AsteroidData(new Vector2(-800, 200), 45, "planet2"),
+                new AsteroidData(new Vector2(0, 350), 32, "planet2"),
+                new AsteroidData(new Vector2(150, -260), 80, "planet2")
             },
         };
 

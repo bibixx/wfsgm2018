@@ -42,7 +42,7 @@ public class CelestialBody extends Entity {
         int wO = w * 3;
         int hO = h * 3;
 
-        if(!Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+        if (!Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             batch.draw(glowTexture, position.x - wG, position.y - hG, wG * 2, hG * 2);
 
             batch.draw(texture, position.x - w/2, position.y - h/2, w, h);
