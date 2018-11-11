@@ -41,6 +41,8 @@ public class MyGdxGame extends Game {
 
 	EntityContainer entityContainer;
 
+	private LevelLoader levelLoader;
+
 	private int currentLevel = 0;
 
 	Level level;
@@ -50,6 +52,8 @@ public class MyGdxGame extends Game {
         batch = new SpriteBatch();
         backgroundBatch = new SpriteBatch();
         grainBatch = new SpriteBatch();
+
+        levelLoader = new LevelLoader();
 
         grainTexture = new Texture("grain-sprite-alpha.png");
 
@@ -81,12 +85,17 @@ public class MyGdxGame extends Game {
             },
         };
 
-		level = new Level(
-				new Vector2(- Gdx.graphics.getWidth() / 2 + 64 , 0),
-                new Vector2(5.3f, 0),
-                levels[currentLevel],
-				"bg.jpg"
-		);
+        for(AsteroidData[] iter : levels) {
+			level = new Level(
+					new Vector2(-Gdx.graphics.getWidth() / 2 + 64, 0),
+					new Vector2(5.3f, 0),
+					iter,
+					"bg.jpg"
+			);
+			levelLoader.addLevel(level);
+		}
+
+		levelLoader.setCurrentLevel(currentLevel);
 
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
@@ -101,7 +110,7 @@ public class MyGdxGame extends Game {
 		world = new World(new Vector2(0, 0f), false);
 		b2dr = new Box2DDebugRenderer();
 
-		spawnLevel(level);
+		spawnLevel(levelLoader.getCurrentLevel());
 	}
 
 	private void spawnLevel(Level level) {
