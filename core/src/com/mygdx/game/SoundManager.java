@@ -34,7 +34,7 @@ public class SoundManager {
     }
 
     void playSound(String soundName){
-//        soundMap.get(soundName).play(1f);
+        soundMap.get(soundName).play(1f);
     }
 
     void playBackgroundMusic(){
