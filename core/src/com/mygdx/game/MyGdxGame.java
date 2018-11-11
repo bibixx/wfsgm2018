@@ -45,6 +45,8 @@ public class MyGdxGame extends Game {
 
 	private int currentLevel = 0;
 
+	Animator animator;
+
 	Level level;
 
 	@Override
@@ -58,8 +60,12 @@ public class MyGdxGame extends Game {
         grainTexture = new Texture("grain-sprite-alpha.png");
 
         soundManager.addSound("fail", "sound1.mp3");
+        soundManager.addSound("success", "sound1.mp3");
+        soundManager.addSound("fail-out-of-bounds", "sound1.mp3");
 
-		font = new BitmapFont();
+        animator = new Animator(grainBatch, "grain-sprite-alpha.png", 0.5f, 2, 1, 0, 1);
+
+        font = new BitmapFont();
 		shapeRenderer = new ShapeRenderer();
 
         AsteroidData[][] levels = {
@@ -132,13 +138,13 @@ public class MyGdxGame extends Game {
         };
 
 		Runnable loadNextLvlCb = () -> {
-            soundManager.playSound("fail");
+            soundManager.playSound("success");
 
             currentLevel++;
             dispose();
             create();
         };
-		sensors = new AsteroidsSensors(world, player, entityContainer, restoreLvlCb, loadNextLvlCb);
+		sensors = new AsteroidsSensors(world, player, entityContainer, restoreLvlCb, loadNextLvlCb, soundManager);
 		world.setContactListener(sensors);
 	}
 
@@ -188,10 +194,14 @@ public class MyGdxGame extends Game {
             create();
         }
 
-
         grainBatch.begin();
-        grainBatch.draw(grainTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        animator.render(new Vector2(0, 0), Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         grainBatch.end();
+
+
+//        grainBatch.begin();
+//        grainBatch.draw(grainTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//        grainBatch.end();
 	}
 
 	@Override

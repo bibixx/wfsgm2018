@@ -20,14 +20,16 @@ public class AsteroidsSensors implements ContactListener {
     private boolean didPlayerHitCelestial;
     private Runnable loadNextLvlCb;
     private boolean shouldLoadNextLvl;
+    private SoundManager soundManager;
 
-    public AsteroidsSensors(World _world, Player _player, EntityContainer _entityContainer, Runnable _restoreLblCb, Runnable _loadNextLevelCb) {
+    public AsteroidsSensors(World _world, Player _player, EntityContainer _entityContainer, Runnable _restoreLblCb, Runnable _loadNextLevelCb, SoundManager soundManager) {
         world = _world;
         player = _player;
         entityContainer = _entityContainer;
         restoreLvlCb = _restoreLblCb;
         sensors = new ArrayMap<String, Body>();
         loadNextLvlCb = _loadNextLevelCb;
+        this.soundManager = soundManager;
 
         for (String key: entityContainer.getKeys()) {
             Entity asteroid = entityContainer.getEntity(key);
@@ -181,7 +183,10 @@ public class AsteroidsSensors implements ContactListener {
         if(shouldRestorePlayer) {
             if(didPlayerHitCelestial) {
                 player.deathAnimation();
+            } else {
+                soundManager.playSound("fail-out-of-bounds");
             }
+
             shouldRestorePlayer = false;
             Timer.schedule(new Timer.Task() {
                 @Override
