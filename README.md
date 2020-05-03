@@ -8,7 +8,5 @@ This game was created during [**Warsaw Film School Game Jam 4 (2018)**](https://
 * Java
 * libGDX
 
-## Screenshots
-| | |
-|-|-|
-|![screenshot 1](https://raw.githubusercontent.com/bodgingbear/laika-wracaj/master/website/screenshot.png)| |
+## Links
+* GitHub: [https://github.com/bodgingbear/Laika-wracaj/)
